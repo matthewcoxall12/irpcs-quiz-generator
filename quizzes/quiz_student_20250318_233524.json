@@ -1,0 +1,98 @@
+[
+  {
+    "type": "Written Answer",
+    "difficulty": "hard",
+    "question": "Describe the lights and shapes that must be exhibited by a vessel engaged in underwater operations when restricted in her ability to maneuver.",
+    "rule_reference": "Rule 27(d)"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "A vessel engaged in underwater operations, when restricted in her ability to maneuver, shall display:",
+    "rule_reference": "Rule 27(d)",
+    "choices": [
+      "Three all-round lights in a vertical line, the highest and lowest being red and the middle one being white",
+      "Three all-round lights in a vertical line, all being red",
+      "Two all-round lights in a vertical line, the upper being red and the lower being white",
+      "Two all-round lights in a vertical line, both being red"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "hard",
+    "question": "A vessel engaged in fishing, when at anchor, shall sound _____ blasts every two minutes. A vessel restricted in her ability to maneuver, when at anchor, shall sound _____ blasts every two minutes. A vessel engaged in underwater operations, when at anchor, shall sound _____ blasts every two minutes.",
+    "rule_reference": "Rule 35(g), (h), (i)"
+  },
+  {
+    "type": "Written Answer",
+    "difficulty": "hard",
+    "question": "Explain the correct procedure for a power-driven vessel when encountering a vessel engaged in fishing in restricted visibility.",
+    "rule_reference": "Rule 19(d)"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "What specific sound signal must be made by a vessel constrained by draft in restricted visibility, and at what interval must this signal be sounded?",
+    "rule_reference": "",
+    "choices": [
+      "A. One long blast followed by two short blasts every two minutes",
+      "B. Two long blasts followed by one short blast every two minutes",
+      "C. One long blast followed by one short blast every two minutes",
+      "D. Two long blasts followed by two short blasts every two minutes"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "You are operating your Combat Support Boat when visibility drops to less than 100 meters. According to IRPCS Rule 19, what specific immediate actions must you take, and in what order?",
+    "rule_reference": "",
+    "choices": [
+      "A. Maintain course and speed while sounding appropriate signals",
+      "B. Reduce to safe speed, sound appropriate signals, post lookouts, and be ready for immediate maneuver",
+      "C. Stop engines and wait for visibility to improve",
+      "D. Increase speed to clear the area quickly"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "hard",
+    "question": "In restricted visibility, a vessel engaged in fishing, when making way through the water, shall sound _____ blasts every two minutes. A vessel restricted in her ability to maneuver shall sound _____ blasts every two minutes. A vessel engaged in towing shall sound _____ blasts every two minutes.",
+    "rule_reference": "Rule 35(c), (d), (e)"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "While navigating your Army Work Boat in restricted visibility, you hear a fog signal of one long blast followed by two short blasts. According to IRPCS Rule 35, what type of vessel is this, and what specific actions must you take?",
+    "rule_reference": "",
+    "choices": [
+      "A. A vessel constrained by draft - keep well clear and be ready for immediate maneuver",
+      "B. A vessel engaged in fishing - keep well clear and be ready for immediate maneuver",
+      "C. A vessel at anchor - keep well clear and be ready for immediate maneuver",
+      "D. A vessel not under command - keep well clear and be ready for immediate maneuver"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "You are operating a Combat Support Boat when you sight a vessel constrained by draft ahead at a distance of 2 nautical miles. According to IRPCS Rule 18, what specific actions must you take and at what distance should you begin these actions?",
+    "rule_reference": "",
+    "choices": [
+      "A. Maintain course and speed until within 1 nautical mile, then reduce speed",
+      "B. Take early and substantial action to keep well clear, beginning at least 1 nautical mile away",
+      "C. Sound five short blasts and wait for the other vessel to respond",
+      "D. Reduce speed only when within 500 meters"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "In restricted visibility, a power-driven vessel making way through the water shall sound:",
+    "rule_reference": "Rule 35(a)",
+    "choices": [
+      "One prolonged blast at intervals of not more than 2 minutes",
+      "Two prolonged blasts at intervals of not more than 2 minutes",
+      "One short blast at intervals of not more than 1 minute",
+      "Five short blasts at intervals of not more than 1 minute"
+    ]
+  }
+]

@@ -1,0 +1,213 @@
+[
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "You are operating your Combat Support Boat when visibility drops to less than 100 meters. According to IRPCS Rule 19, what specific immediate actions must you take, and in what order?",
+    "answer": "B. Reduce to safe speed, sound appropriate signals, post lookouts, and be ready for immediate maneuver",
+    "choices": [
+      "A. Maintain course and speed while sounding appropriate signals",
+      "B. Reduce to safe speed, sound appropriate signals, post lookouts, and be ready for immediate maneuver",
+      "C. Stop engines and wait for visibility to improve",
+      "D. Increase speed to clear the area quickly"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "medium",
+    "question": "A vessel constrained by draft must be given a wide berth of at least _____ meters.",
+    "answer": "500"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "In IALA Region A, what does a red buoy with a conical top mark indicate when entering from seaward, and what specific information does this provide about the channel?",
+    "answer": "A. Port side of the channel - indicates the left side when entering from seaward",
+    "choices": [
+      "A. Port side of the channel - indicates the left side when entering from seaward",
+      "B. Starboard side of the channel - indicates the right side when entering from seaward",
+      "C. Isolated danger - indicates a specific hazard to be avoided",
+      "D. Safe water - indicates navigable water on all sides"
+    ]
+  },
+  {
+    "type": "Image Question",
+    "difficulty": "easy",
+    "question": "What type of vessel is shown in this image? [Image shows a vessel with three red lights in a vertical line]",
+    "answer": "A. Vessel constrained by draft",
+    "choices": [
+      "A. Vessel constrained by draft",
+      "B. Vessel engaged in fishing",
+      "C. Vessel at anchor",
+      "D. Vessel not under command"
+    ],
+    "image": "vessel_constrained_by_draft.jpg"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "While navigating your Army Work Boat in restricted visibility, you hear a fog signal of one long blast followed by two short blasts. According to IRPCS Rule 35, what type of vessel is this, and what specific actions must you take?",
+    "answer": "A. A vessel constrained by draft - keep well clear and be ready for immediate maneuver",
+    "choices": [
+      "A. A vessel constrained by draft - keep well clear and be ready for immediate maneuver",
+      "B. A vessel engaged in fishing - keep well clear and be ready for immediate maneuver",
+      "C. A vessel at anchor - keep well clear and be ready for immediate maneuver",
+      "D. A vessel not under command - keep well clear and be ready for immediate maneuver"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "medium",
+    "question": "According to IRPCS Rule 18, vessels constrained by draft must be given a wide berth of at least _____ meters.",
+    "answer": "500"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "What specific sound signal must be made by a vessel constrained by draft in restricted visibility, and at what interval must this signal be sounded?",
+    "answer": "A. One long blast followed by two short blasts every two minutes",
+    "choices": [
+      "A. One long blast followed by two short blasts every two minutes",
+      "B. Two long blasts followed by one short blast every two minutes",
+      "C. One long blast followed by one short blast every two minutes",
+      "D. Two long blasts followed by two short blasts every two minutes"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "hard",
+    "question": "You are operating a Combat Support Boat when you sight a vessel constrained by draft ahead at a distance of 2 nautical miles. According to IRPCS Rule 18, what specific actions must you take and at what distance should you begin these actions?",
+    "answer": "B. Take early and substantial action to keep well clear, beginning at least 1 nautical mile away",
+    "choices": [
+      "A. Maintain course and speed until within 1 nautical mile, then reduce speed",
+      "B. Take early and substantial action to keep well clear, beginning at least 1 nautical mile away",
+      "C. Sound five short blasts and wait for the other vessel to respond",
+      "D. Reduce speed only when within 500 meters"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "medium",
+    "question": "A vessel operating astern propulsion must sound _____ short blasts.",
+    "answer": "three"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "easy",
+    "question": "Which vessel has priority when crossing a main shipping channel?",
+    "answer": "A. Vessels constrained by draft",
+    "choices": [
+      "A. Vessels constrained by draft",
+      "B. Vessels engaged in fishing",
+      "C. Sailing vessels",
+      "D. Power-driven vessels"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "While navigating your Combat Support Boat in restricted visibility, you hear a vessel sound one long blast every two minutes. According to IRPCS Rule 35, what type of vessel is this, and what specific actions must you take?",
+    "answer": "B. A power-driven vessel making way through the water - proceed with caution and be ready for immediate maneuver",
+    "choices": [
+      "A. A vessel constrained by draft - keep well clear",
+      "B. A power-driven vessel making way through the water - proceed with caution and be ready for immediate maneuver",
+      "C. A vessel at anchor - keep well clear",
+      "D. A vessel not under command - keep well clear"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "medium",
+    "question": "In restricted visibility, a power-driven vessel making way through the water must sound one long blast every _____ minutes.",
+    "answer": "two"
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "While operating your MEXE, you hear a vessel sound five short blasts. According to IRPCS Rule 34, what does this signal indicate, and what specific action must you take?",
+    "answer": "D. The vessel is in doubt about your intentions - take immediate action to clarify your intentions",
+    "choices": [
+      "A. The vessel is altering course to starboard - maintain course and speed",
+      "B. The vessel is altering course to port - maintain course and speed",
+      "C. The vessel is operating astern propulsion - maintain course and speed",
+      "D. The vessel is in doubt about your intentions - take immediate action to clarify your intentions"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "During daylight hours, you sight a vessel displaying two black cones with their points together. According to IRPCS Rule 27, what type of vessel is this, and what specific actions must you take?",
+    "answer": "D. A vessel not under command - you must keep well clear and avoid passing close to her",
+    "choices": [
+      "A. A vessel constrained by draft - you must keep well clear",
+      "B. A vessel engaged in fishing - you must keep well clear",
+      "C. A vessel at anchor - you must keep well clear",
+      "D. A vessel not under command - you must keep well clear and avoid passing close to her"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "What does a black and yellow horizontally striped buoy indicate in IALA Region A, and what specific information does this provide about the hazard?",
+    "answer": "C. Isolated danger - indicates a specific hazard to be avoided with navigable water on all sides",
+    "choices": [
+      "A. Port side of the channel - indicates the left side when entering from seaward",
+      "B. Starboard side of the channel - indicates the right side when entering from seaward",
+      "C. Isolated danger - indicates a specific hazard to be avoided with navigable water on all sides",
+      "D. Safe water - indicates navigable water on all sides"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "What does a red and green horizontally striped buoy indicate in IALA Region A, and what specific information does this provide about the channel options?",
+    "answer": "D. Preferred channel - indicates the main channel direction with the color of the top stripe",
+    "choices": [
+      "A. Port side of the channel - indicates the left side when entering from seaward",
+      "B. Starboard side of the channel - indicates the right side when entering from seaward",
+      "C. Isolated danger - indicates a specific hazard to be avoided",
+      "D. Preferred channel - indicates the main channel direction with the color of the top stripe"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "What does a red and white vertically striped buoy indicate in IALA Region A, and what specific information does this provide about the surrounding waters?",
+    "answer": "D. Safe water - indicates navigable water on all sides with no hazards",
+    "choices": [
+      "A. Port side of the channel - indicates the left side when entering from seaward",
+      "B. Starboard side of the channel - indicates the right side when entering from seaward",
+      "C. Isolated danger - indicates a specific hazard to be avoided",
+      "D. Safe water - indicates navigable water on all sides with no hazards"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "medium",
+    "question": "What does a green buoy with a cylindrical top mark indicate in IALA Region A, and what specific information does this provide about the channel?",
+    "answer": "B. Starboard side of the channel - indicates the right side when entering from seaward",
+    "choices": [
+      "A. Port side of the channel - indicates the left side when entering from seaward",
+      "B. Starboard side of the channel - indicates the right side when entering from seaward",
+      "C. Isolated danger - indicates a specific hazard to be avoided",
+      "D. Safe water - indicates navigable water on all sides"
+    ]
+  },
+  {
+    "type": "Multiple Choice",
+    "difficulty": "easy",
+    "question": "What sound signal indicates a vessel is altering course to starboard?",
+    "answer": "A. One short blast",
+    "choices": [
+      "A. One short blast",
+      "B. Two short blasts",
+      "C. Three short blasts",
+      "D. One long blast"
+    ]
+  },
+  {
+    "type": "Fill in the Gap",
+    "difficulty": "medium",
+    "question": "A vessel at anchor must display one black ball with a diameter of at least _____ meters.",
+    "answer": "0.6"
+  }
+]
