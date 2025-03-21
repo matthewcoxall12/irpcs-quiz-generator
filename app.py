@@ -172,5 +172,9 @@ def delete_quiz(quiz_id):
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+@app.route('/policy')
+def policy():
+    return render_template('policy.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000))) 
