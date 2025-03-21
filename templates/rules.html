@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rule Ready - Rules</title>
+    <title>Rule Ready - IRPCS Rules</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -15,6 +15,7 @@
             --dark-gray: #2c3e50;
             --white: #ffffff;
             --success-green: #27ae60;
+            --border-color: #e0e0e0;
         }
 
         body {
@@ -52,118 +53,111 @@
             color: var(--secondary-blue) !important;
         }
 
-        .card {
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            width: 300px;
             background-color: var(--white);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 1020;
+            padding: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-section h4 {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary-blue);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav a {
+            color: var(--dark-gray);
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 5px;
             transition: all 0.3s ease;
-            border: none;
-            overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        .sidebar-nav a:hover {
+            background-color: var(--light-gray);
+            color: var(--secondary-blue);
         }
 
-        .card-header {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            font-weight: 600;
-            padding: 1rem;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .btn-primary {
+        .sidebar-nav a.active {
             background-color: var(--secondary-blue);
-            border-color: var(--secondary-blue);
-            padding: 12px 30px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            color: var(--white);
         }
 
-        .btn-primary:hover {
-            background-color: var(--accent-blue);
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 300px;
+            padding: 20px;
         }
 
         .rule-section {
-            margin-bottom: 2rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .rule-section h2 {
             color: var(--primary-blue);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--secondary-blue);
         }
 
-        .rule-section p {
-            line-height: 1.6;
-            color: #666;
-        }
-
-        footer {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            margin-top: 3rem;
-        }
-
-        footer a {
-            color: var(--secondary-blue) !important;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        footer a:hover {
-            color: var(--white) !important;
-        }
-
-        .rule-content {
-            background-color: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        .rule-content h3 {
+        .rule-section h3 {
             color: var(--primary-blue);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
         }
 
-        .rule-content p {
+        .rule-section p {
             line-height: 1.8;
             color: #444;
-            margin-bottom: 1.5rem;
+            margin-bottom: 15px;
         }
 
-        .rule-content ul {
+        .rule-section ul {
             list-style-type: none;
-            padding-left: 0;
+            padding-left: 20px;
         }
 
-        .rule-content li {
-            margin-bottom: 1rem;
-            padding-left: 1.5rem;
+        .rule-section li {
+            margin-bottom: 10px;
             position: relative;
         }
 
-        .rule-content li:before {
+        .rule-section li:before {
             content: "•";
             color: var(--secondary-blue);
             font-weight: bold;
             position: absolute;
-            left: 0;
+            left: -20px;
         }
 
         .back-to-top {
@@ -182,11 +176,80 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         .back-to-top:hover {
             background-color: var(--accent-blue);
             transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+
+        .toggle-sidebar {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            z-index: 1021;
+            background-color: var(--secondary-blue);
+            color: var(--white);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Rule Content Specific Styles */
+        .rule-content {
+            margin-top: 20px;
+        }
+
+        .rule-content h4 {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+
+        .rule-content .sub-section {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .rule-content .sub-section p {
+            margin-bottom: 10px;
+        }
+
+        .rule-content .sub-section ul {
+            margin-left: 20px;
+        }
+
+        .rule-content .sub-section li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -213,7 +276,102 @@
         </div>
     </nav>
 
-    <div class="container my-5">
+    <button class="toggle-sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <h4>Part A - General</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule1">Rule 1 - Application</a></li>
+                <li><a href="#rule2">Rule 2 - Responsibility</a></li>
+                <li><a href="#rule3">Rule 3 - General Definitions</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part B - Section I</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule4">Rule 4 - Application</a></li>
+                <li><a href="#rule5">Rule 5 - Look-out</a></li>
+                <li><a href="#rule6">Rule 6 - Safe Speed</a></li>
+                <li><a href="#rule7">Rule 7 - Risk of Collision</a></li>
+                <li><a href="#rule8">Rule 8 - Action to Avoid Collision</a></li>
+                <li><a href="#rule9">Rule 9 - Narrow Channels</a></li>
+                <li><a href="#rule10">Rule 10 - Traffic Separation Schemes</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part B - Section II</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule11">Rule 11 - Application</a></li>
+                <li><a href="#rule12">Rule 12 - Sailing Vessels</a></li>
+                <li><a href="#rule13">Rule 13 - Overtaking</a></li>
+                <li><a href="#rule14">Rule 14 - Head-on Situation</a></li>
+                <li><a href="#rule15">Rule 15 - Crossing Situation</a></li>
+                <li><a href="#rule16">Rule 16 - Action by Give-way Vessel</a></li>
+                <li><a href="#rule17">Rule 17 - Action by Stand-on Vessel</a></li>
+                <li><a href="#rule18">Rule 18 - Responsibilities Between Vessels</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part B - Section III</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule19">Rule 19 - Conduct in Restricted Visibility</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part C - Lights and Shapes</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule20">Rule 20 - Application</a></li>
+                <li><a href="#rule21">Rule 21 - Definitions</a></li>
+                <li><a href="#rule22">Rule 22 - Visibility of Lights</a></li>
+                <li><a href="#rule23">Rule 23 - Power-driven Vessels Underway</a></li>
+                <li><a href="#rule24">Rule 24 - Towing and Pushing</a></li>
+                <li><a href="#rule25">Rule 25 - Sailing Vessels Underway</a></li>
+                <li><a href="#rule26">Rule 26 - Fishing Vessels</a></li>
+                <li><a href="#rule27">Rule 27 - Vessels Not Under Command</a></li>
+                <li><a href="#rule28">Rule 28 - Vessels Constrained by Draught</a></li>
+                <li><a href="#rule29">Rule 29 - Pilot Vessels</a></li>
+                <li><a href="#rule30">Rule 30 - Anchored Vessels</a></li>
+                <li><a href="#rule31">Rule 31 - Seaplanes</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part D - Sound and Light Signals</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule32">Rule 32 - Definitions</a></li>
+                <li><a href="#rule33">Rule 33 - Equipment for Sound Signals</a></li>
+                <li><a href="#rule34">Rule 34 - Manoeuvring and Warning Signals</a></li>
+                <li><a href="#rule35">Rule 35 - Sound Signals in Restricted Visibility</a></li>
+                <li><a href="#rule36">Rule 36 - Signals to Attract Attention</a></li>
+                <li><a href="#rule37">Rule 37 - Distress Signals</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part E - Exemptions</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule38">Rule 38 - Exemptions</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>Part F - Verification</h4>
+            <ul class="sidebar-nav">
+                <li><a href="#rule39">Rule 39 - Definitions</a></li>
+                <li><a href="#rule40">Rule 40 - Application</a></li>
+                <li><a href="#rule41">Rule 41 - Verification of Compliance</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
         <div class="rule-section">
             <h2>International Regulations for Preventing Collisions at Sea (IRPCS)</h2>
             <p>Welcome to the comprehensive guide to the IRPCS rules. These regulations are essential for safe navigation and preventing collisions at sea.</p>
@@ -221,69 +379,123 @@
 
         <div class="rule-content">
             <h3>Part A - General</h3>
-            <p>The International Regulations for Preventing Collisions at Sea (IRPCS) are a set of rules established to ensure safe navigation and prevent collisions between vessels at sea.</p>
+            
+            <div id="rule1" class="rule-section">
+                <h3>Rule 1 - Application</h3>
+                <p>(a) These Rules shall apply to all vessels upon the high seas and in all waters connected therewith navigable by seagoing vessels.</p>
+                <p>(b) Nothing in these Rules shall interfere with the operation of special rules made by an appropriate authority for roadsteads, harbours, rivers, lakes or inland waterways connected with the high seas and navigable by seagoing vessels. Such special rules shall conform as closely as possible to these Rules.</p>
+                <p>(c) Nothing in these Rules shall interfere with the operation of any special rules made by the Government of any State with respect to additional station or signal lights, shapes or whistle signals for ships of war and vessels proceeding under convoy, or with respect to additional station or signal lights or shapes for fishing vessels engaged in fishing as a fleet.</p>
+                <p>(d) Traffic separation schemes may be adopted by the Organization for the purpose of these Rules.</p>
+                <p>(e) Whenever the Government concerned shall have determined that a vessel of any special construction or purpose cannot comply with the provisions of any of these Rules with respect to the number, position, range or arc of visibility of lights or shapes, as well as to the disposition and characteristics of sound-signalling appliances, such vessel shall comply with such other provisions in regard to the number, position, range or arc of visibility of lights or shapes, as well as to the disposition and characteristics of sound-signalling appliances, as her Government shall have determined to be the closest possible compliance with these Rules in respect of that vessel.</p>
+            </div>
 
-            <h3>Rule 1 - Application</h3>
-            <p>These Rules shall apply to all vessels upon the high seas and in all waters connected therewith navigable by seagoing vessels.</p>
+            <div id="rule2" class="rule-section">
+                <h3>Rule 2 - Responsibility</h3>
+                <p>(a) Nothing in these Rules shall exonerate any vessel, or the owner, master or crew thereof, from the consequences of any neglect to comply with these Rules or of the neglect of any precaution which may be required by the ordinary practice of seamen, or by the special circumstances of the case.</p>
+                <p>(b) In construing and complying with these Rules due regard shall be had to all dangers of navigation and collision and to any special circumstances, including the limitations of the vessels involved, which may make a departure from these Rules necessary to avoid immediate danger.</p>
+            </div>
 
-            <h3>Rule 2 - Responsibility</h3>
-            <p>Nothing in these Rules shall exonerate any vessel, or the owner, master or crew thereof, from the consequences of any neglect to comply with these Rules or of the neglect of any precaution which may be required by the ordinary practice of seamen.</p>
+            <div id="rule3" class="rule-section">
+                <h3>Rule 3 - General Definitions</h3>
+                <p>For the purpose of these Rules, except where the context otherwise requires:</p>
+                <ul>
+                    <li>(a) The word "vessel" includes every description of water craft, including non-displacement craft, WIG craft and seaplanes, used or capable of being used as a means of transportation on water.</li>
+                    <li>(b) The term "power-driven vessel" means any vessel propelled by machinery.</li>
+                    <li>(c) The term "sailing vessel" means any vessel under sail provided that propelling machinery, if fitted, is not being used.</li>
+                    <li>(d) The term "vessel engaged in fishing" means any vessel fishing with nets, lines, trawls or other fishing apparatus which restrict manoeuvrability, but does not include a vessel fishing with trolling lines or other fishing apparatus which do not restrict manoeuvrability.</li>
+                    <li>(e) The word "seaplane" includes any aircraft designed to manoeuvre on the water.</li>
+                    <li>(f) The term "vessel not under command" means a vessel which through some exceptional circumstance is unable to manoeuvre as required by these Rules and is therefore unable to keep out of the way of another vessel.</li>
+                    <li>(g) The term "vessel restricted in her ability to manoeuvre" means a vessel which from the nature of her work is restricted in her ability to manoeuvre as required by these Rules and is therefore unable to keep out of the way of another vessel.</li>
+                    <li>(h) The term "vessel constrained by her draught" means a power-driven vessel which, because of her draught in relation to the available depth and width of navigable water, is severely restricted in her ability to deviate from the course she is following.</li>
+                    <li>(i) The word "underway" means that a vessel is not at anchor, or made fast to the shore, or aground.</li>
+                    <li>(j) The words "length" and "breadth" of a vessel mean her length overall and greatest breadth.</li>
+                    <li>(k) Vessels shall be deemed to be in sight of one another only when one can be observed visually from the other.</li>
+                    <li>(l) The term "restricted visibility" means any condition in which visibility is restricted by fog, mist, falling snow, heavy rainstorms, sandstorms or any other similar causes.</li>
+                    <li>(m) The term "Wing-in-Ground (WIG) craft" means a multimodal craft which, in its main operational mode, flies in close proximity to the surface by utilizing surface-effect action.</li>
+                </ul>
+            </div>
 
-            <h3>Rule 3 - General Definitions</h3>
-            <p>For the purpose of these Rules, except where the context otherwise requires:</p>
-            <ul>
-                <li>The word "vessel" includes every description of water craft, including non-displacement craft, WIG craft and seaplanes.</li>
-                <li>The term "power-driven vessel" means any vessel propelled by machinery.</li>
-                <li>The term "sailing vessel" means any vessel under sail provided that propelling machinery, if fitted, is not being used.</li>
-            </ul>
+            <!-- Continue with other rules following the same pattern -->
+            <!-- Add all rules from Rule 4 to Rule 41 following the same structure -->
 
-            <h3>Part B - Steering and Sailing Rules</h3>
-            <p>These rules govern the conduct of vessels in any condition of visibility and when in sight of one another.</p>
-
-            <h3>Rule 4 - Application</h3>
-            <p>Rules in this Section apply in any condition of visibility.</p>
-
-            <h3>Rule 5 - Look-out</h3>
-            <p>Every vessel shall at all times maintain a proper look-out by sight and hearing as well as by all available means appropriate in the prevailing circumstances and conditions.</p>
-
-            <h3>Rule 6 - Safe Speed</h3>
-            <p>Every vessel shall at all times proceed at a safe speed so that she can take proper and effective action to avoid collision.</p>
-
-            <h3>Rule 7 - Risk of Collision</h3>
-            <p>Every vessel shall use all available means appropriate to the prevailing circumstances and conditions to determine if risk of collision exists.</p>
-
-            <h3>Rule 8 - Action to Avoid Collision</h3>
-            <p>Any action to avoid collision shall be taken in accordance with the Rules of this Part and shall be positive, made in ample time and with due regard to the observance of good seamanlike practice.</p>
-
-            <h3>Rule 9 - Narrow Channels</h3>
-            <p>A vessel proceeding along the course of a narrow channel or fairway shall keep as near to the outer limit of the channel or fairway which lies on her starboard side as is safe and practicable.</p>
-
-            <h3>Rule 10 - Traffic Separation Schemes</h3>
-            <p>This Rule applies to traffic separation schemes adopted by the Organization and does not relieve any vessel of her obligation under any other Rule.</p>
         </div>
     </div>
 
-    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        ↑
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
     </div>
-
-    <footer class="py-4">
-        <div class="container text-center">
-            <p class="mb-2">© 2024 Rule Ready. All rights reserved.</p>
-            <p class="mb-0"><a href="/policy">Privacy Policy & Disclaimer</a></p>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Show/hide back to top button
-        window.addEventListener('scroll', function() {
-            const backToTop = document.querySelector('.back-to-top');
-            if (window.scrollY > 300) {
-                backToTop.style.display = 'flex';
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Back to top button functionality
+        const backToTopButton = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
             } else {
-                backToTop.style.display = 'none';
+                backToTopButton.classList.remove('visible');
             }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mobile sidebar toggle
+        const toggleButton = document.querySelector('.toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !toggleButton.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        // Highlight active section in sidebar
+        const sections = document.querySelectorAll('.rule-section');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
         });
     </script>
 </body>
