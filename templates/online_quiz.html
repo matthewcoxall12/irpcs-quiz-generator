@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Ready - Online Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2c3e50;
+            --secondary-blue: #3498db;
+            --accent-blue: #2980b9;
+            --light-gray: #ecf0f1;
+            --dark-gray: #2c3e50;
+            --white: #ffffff;
+            --success-green: #27ae60;
+            --error-red: #e74c3c;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-gray);
+            padding-top: 60px;
+        }
+
+        .navbar {
+            background-color: var(--primary-blue);
+            border-bottom: 3px solid var(--secondary-blue);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+        }
+
+        .navbar-brand {
+            color: var(--white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-blue) !important;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-header h1 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-header p {
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .question-container:hover {
+            border-color: var(--secondary-blue);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option:hover {
+            background-color: var(--light-gray);
+            border-color: var(--secondary-blue);
+        }
+
+        .option.selected {
+            background-color: var(--secondary-blue);
+            border-color: var(--secondary-blue);
+            color: var(--white);
+        }
+
+        .option.correct {
+            background-color: var(--success-green);
+            border-color: var(--success-green);
+            color: var(--white);
+        }
+
+        .option.incorrect {
+            background-color: var(--error-red);
+            border-color: var(--error-red);
+            color: var(--white);
+        }
+
+        .option input[type="radio"] {
+            margin: 0;
+        }
+
+        .option input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-green);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--error-red);
+            display: block;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn-quiz {
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            border: none;
+        }
+
+        .btn-next {
+            background-color: var(--secondary-blue);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-submit {
+            background-color: var(--success-green);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-quiz:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-progress {
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary-blue);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .quiz-results {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .quiz-results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--secondary-blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 600;
+            margin: 0 auto 2rem;
+        }
+
+        .results-text {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-restart {
+            background-color: var(--secondary-blue);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            background-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .image-question {
+            max-width: 100%;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .question-container {
+                padding: 1rem;
+            }
+
+            .option {
+                padding: 0.8rem;
+            }
+
+            .quiz-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-quiz {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Rule Ready</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/generate_quiz">Generate Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/online_quiz">Online Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rules">Rules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/saved_quizzes">Saved Quizzes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1>IRPCS Online Quiz</h1>
+                <p>Test your knowledge of the International Regulations for Preventing Collisions at Sea</p>
+            </div>
+
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text">Question 1 of 10</div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text">What is the primary purpose of the IRPCS?</div>
+                <div class="options-container">
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1a">
+                        <label for="q1a">To prevent collisions at sea</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1b">
+                        <label for="q1b">To regulate ship speeds</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1c">
+                        <label for="q1c">To standardize ship designs</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" id="q1d">
+                        <label for="q1d">To manage port operations</label>
+                    </div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <div class="quiz-controls">
+                <button class="btn btn-quiz btn-prev" disabled>Previous</button>
+                <button class="btn btn-quiz btn-next">Next</button>
+                <button class="btn btn-quiz btn-submit" style="display: none;">Submit Quiz</button>
+            </div>
+        </div>
+
+        <div class="quiz-results">
+            <div class="score-circle">0%</div>
+            <div class="results-text"></div>
+            <button class="btn btn-restart">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Quiz data structure
+        const quizData = [
+            {
+                question: "What is the primary purpose of the IRPCS?",
+                type: "multiple_choice",
+                options: [
+                    "To prevent collisions at sea",
+                    "To regulate ship speeds",
+                    "To standardize ship designs",
+                    "To manage port operations"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which vessel has the right of way in a head-on situation?",
+                type: "multiple_choice",
+                options: [
+                    "The larger vessel",
+                    "The vessel on the right",
+                    "Both vessels should alter course to starboard",
+                    "The faster vessel"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does a vessel's masthead light indicate?",
+                type: "multiple_choice",
+                options: [
+                    "The vessel is at anchor",
+                    "The vessel is underway",
+                    "The vessel is aground",
+                    "The vessel is not under command"
+                ],
+                correct: 1
+            },
+            {
+                question: "In restricted visibility, what action should a vessel take?",
+                type: "multiple_choice",
+                options: [
+                    "Proceed at maximum speed",
+                    "Stop and wait for visibility to improve",
+                    "Proceed at a safe speed",
+                    "Use only radar for navigation"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the meaning of three short blasts on a vessel's whistle?",
+                type: "multiple_choice",
+                options: [
+                    "I am altering my course to starboard",
+                    "I am altering my course to port",
+                    "I am operating astern propulsion",
+                    "I am in distress"
+                ],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = new Array(quizData.length).fill(null);
+
+        // DOM Elements
+        const questionContainer = document.querySelector('.question-container');
+        const optionsContainer = document.querySelector('.options-container');
+        const feedbackElement = document.querySelector('.feedback');
+        const prevButton = document.querySelector('.btn-prev');
+        const nextButton = document.querySelector('.btn-next');
+        const submitButton = document.querySelector('.btn-submit');
+        const progressFill = document.querySelector('.progress-fill');
+        const progressText = document.querySelector('.progress-text');
+        const quizResults = document.querySelector('.quiz-results');
+        const scoreCircle = document.querySelector('.score-circle');
+        const resultsText = document.querySelector('.results-text');
+        const restartButton = document.querySelector('.btn-restart');
+
+        // Initialize quiz
+        function initQuiz() {
+            displayQuestion();
+            updateProgress();
+            updateButtons();
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const question = quizData[currentQuestion];
+            questionContainer.querySelector('.question-text').textContent = question.question;
+            
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <input type="radio" name="q${currentQuestion + 1}" id="q${currentQuestion + 1}${index}">
+                    <label for="q${currentQuestion + 1}${index}">${option}</label>
+                `;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionElement);
+            });
+
+            // Restore previous answer if exists
+            if (answers[currentQuestion] !== null) {
+                const radio = document.querySelector(`#q${currentQuestion + 1}${answers[currentQuestion]}`);
+                if (radio) radio.checked = true;
+            }
+
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+        }
+
+        // Update navigation buttons
+        function updateButtons() {
+            prevButton.disabled = currentQuestion === 0;
+            nextButton.style.display = currentQuestion === quizData.length - 1 ? 'none' : 'block';
+            submitButton.style.display = currentQuestion === quizData.length - 1 ? 'block' : 'none';
+        }
+
+        // Handle option selection
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            options[index].classList.add('selected');
+        }
+
+        // Check answer and show feedback
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption) return false;
+
+            const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedOption);
+            const isCorrect = selectedIndex === quizData[currentQuestion].correct;
+
+            if (isCorrect) {
+                score++;
+                selectedOption.classList.add('correct');
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.classList.add('correct');
+            } else {
+                selectedOption.classList.add('incorrect');
+                feedbackElement.textContent = 'Incorrect. The correct answer was: ' + 
+                    quizData[currentQuestion].options[quizData[currentQuestion].correct];
+                feedbackElement.classList.add('incorrect');
+            }
+
+            return true;
+        }
+
+        // Show quiz results
+        function showResults() {
+            const percentage = Math.round((score / quizData.length) * 100);
+            scoreCircle.textContent = `${percentage}%`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = 'Excellent! You have a thorough understanding of the IRPCS rules.';
+            } else if (percentage >= 70) {
+                message = 'Good job! You have a solid understanding of the IRPCS rules.';
+            } else if (percentage >= 50) {
+                message = 'Fair. Consider reviewing the rules to improve your knowledge.';
+            } else {
+                message = 'You might want to study the IRPCS rules more thoroughly.';
+            }
+            
+            resultsText.textContent = message;
+            document.querySelector('.quiz-container').style.display = 'none';
+            quizResults.classList.add('show');
+        }
+
+        // Event Listeners
+        prevButton.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+                updateButtons();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (checkAnswer()) {
+                if (currentQuestion < quizData.length - 1) {
+                    currentQuestion++;
+                    displayQuestion();
+                    updateProgress();
+                    updateButtons();
+                }
+            }
+        });
+
+        submitButton.addEventListener('click', () => {
+            if (checkAnswer()) {
+                showResults();
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            currentQuestion = 0;
+            score = 0;
+            answers = new Array(quizData.length).fill(null);
+            document.querySelector('.quiz-container').style.display = 'block';
+            quizResults.classList.remove('show');
+            initQuiz();
+        });
+
+        // Initialize the quiz
+        initQuiz();
+    </script>
+</body>
+</html> 
