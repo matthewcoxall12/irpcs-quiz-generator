@@ -60,8 +60,12 @@ def create_word_document(questions, title="IRPCS Quiz", show_answers=False):
     return doc
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('home.html')
+
+@app.route('/quiz')
+def quiz():
+    return render_template('quiz.html')
 
 @app.route('/rules')
 def rules():
