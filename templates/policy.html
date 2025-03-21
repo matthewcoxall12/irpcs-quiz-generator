@@ -8,64 +8,154 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --navy-blue: #1a2b4c;
-            --military-green: #4b5320;
-            --camo-gray: #8b8980;
-            --desert-tan: #d2b48c;
-            --warning-yellow: #ffd700;
-            --danger-red: #8b0000;
+            --primary-blue: #2c3e50;
+            --secondary-blue: #3498db;
+            --accent-blue: #2980b9;
+            --light-gray: #ecf0f1;
+            --dark-gray: #2c3e50;
+            --white: #ffffff;
+            --success-green: #27ae60;
         }
 
         body {
-            background-color: #f4f4f4;
+            background-color: var(--light-gray);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--navy-blue);
+            color: var(--dark-gray);
+            padding-top: 60px;
         }
 
         .navbar {
-            background-color: var(--navy-blue);
-            border-bottom: 3px solid var(--military-green);
+            background-color: var(--primary-blue);
+            border-bottom: 3px solid var(--secondary-blue);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
         }
 
         .navbar-brand {
-            color: var(--desert-tan) !important;
-            font-weight: bold;
+            color: var(--white) !important;
+            font-weight: 600;
             font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-blue) !important;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
         }
 
         .policy-section {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin: 2rem 0;
+            margin-bottom: 2rem;
         }
 
         .policy-section h2 {
-            color: var(--navy-blue);
+            color: var(--primary-blue);
+            font-weight: 600;
             margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--military-green);
             padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-blue);
+        }
+
+        .policy-section h3 {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
 
         .policy-section p {
             line-height: 1.6;
+            color: #666;
             margin-bottom: 1rem;
         }
 
         .policy-section ul {
-            margin-bottom: 1.5rem;
+            list-style-type: none;
+            padding-left: 0;
         }
 
         .policy-section li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .policy-section li:before {
+            content: "•";
+            color: var(--secondary-blue);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .nautical-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            color: var(--secondary-blue);
+        }
+
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: var(--secondary-blue) !important;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--white) !important;
+        }
+
+        .wave-decoration {
+            position: relative;
+            height: 50px;
+            background: linear-gradient(45deg, var(--primary-blue) 49%, transparent 51%);
+            margin-bottom: 2rem;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Rule Ready</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-ship"></i> Rule Ready</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -85,56 +175,60 @@
         </div>
     </nav>
 
+    <div class="wave-decoration"></div>
+
     <div class="container my-5">
         <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-shield-alt nautical-icon"></i>Privacy Policy & Disclaimer</h5>
+            </div>
             <div class="card-body">
-                <h1 class="card-title mb-4">Privacy Policy & Disclaimer</h1>
-                <p>Welcome to Rule Ready. Please read the following information carefully before using this platform.</p>
+                <div class="policy-section">
+                    <h2><i class="fas fa-anchor nautical-icon"></i>Purpose and Scope</h2>
+                    <p>This platform is designed as an educational tool to assist in the study and understanding of the International Regulations for Preventing Collisions at Sea (IRPCS). While we strive to provide accurate and comprehensive information, this tool should be used as a supplementary learning resource and not as the sole source of preparation for any examinations or certifications.</p>
 
-                <h3>Purpose and Scope</h3>
-                <p>This platform is designed as an educational tool to assist in the study and understanding of the International Regulations for Preventing Collisions at Sea (IRPCS). While we strive to provide accurate and comprehensive information, this tool should be used as a supplementary learning resource and not as the sole source of preparation for any examinations or certifications.</p>
+                    <h2><i class="fas fa-exclamation-triangle nautical-icon"></i>No Guarantee of Results</h2>
+                    <p>Rule Ready makes no guarantees regarding:</p>
+                    <ul>
+                        <li>Success in any examinations or certifications</li>
+                        <li>Completeness or accuracy of the information provided</li>
+                        <li>Fitness for any particular purpose</li>
+                        <li>Uninterrupted or error-free operation of the platform</li>
+                    </ul>
 
-                <h3>No Guarantee of Results</h3>
-                <p>Rule Ready makes no guarantees regarding:</p>
-                <ul>
-                    <li>Success in any examinations or certifications</li>
-                    <li>Completeness or accuracy of the information provided</li>
-                    <li>Fitness for any particular purpose</li>
-                    <li>Uninterrupted or error-free operation of the platform</li>
-                </ul>
+                    <h2><i class="fas fa-user-shield nautical-icon"></i>User Responsibility</h2>
+                    <p>Users of this platform acknowledge and agree that:</p>
+                    <ul>
+                        <li>They are responsible for verifying all information independently</li>
+                        <li>They should consult official IRPCS documentation and qualified instructors</li>
+                        <li>Their success in examinations depends on multiple factors beyond this platform</li>
+                        <li>They use this tool at their own risk and discretion</li>
+                    </ul>
 
-                <h3>User Responsibility</h3>
-                <p>Users of this platform acknowledge and agree that:</p>
-                <ul>
-                    <li>They are responsible for verifying all information independently</li>
-                    <li>They should consult official IRPCS documentation and qualified instructors</li>
-                    <li>Their success in examinations depends on multiple factors beyond this platform</li>
-                    <li>They use this tool at their own risk and discretion</li>
-                </ul>
+                    <h2><i class="fas fa-balance-scale nautical-icon"></i>Limitation of Liability</h2>
+                    <p>Rule Ready and its operators shall not be liable for:</p>
+                    <ul>
+                        <li>Any direct or indirect damages arising from the use of this platform</li>
+                        <li>Any consequences of relying on the information provided</li>
+                        <li>Any technical issues or service interruptions</li>
+                        <li>Any third-party content or links</li>
+                    </ul>
 
-                <h3>Limitation of Liability</h3>
-                <p>Rule Ready and its operators shall not be liable for:</p>
-                <ul>
-                    <li>Any direct or indirect damages arising from the use of this platform</li>
-                    <li>Any consequences of relying on the information provided</li>
-                    <li>Any technical issues or service interruptions</li>
-                    <li>Any third-party content or links</li>
-                </ul>
+                    <h2><i class="fas fa-copyright nautical-icon"></i>Intellectual Property</h2>
+                    <p>All content on this platform is protected by intellectual property rights. Users may not:</p>
+                    <ul>
+                        <li>Copy or reproduce any content without permission</li>
+                        <li>Use the platform for commercial purposes</li>
+                        <li>Modify or create derivative works</li>
+                        <li>Distribute or share access to the platform</li>
+                    </ul>
 
-                <h3>Intellectual Property</h3>
-                <p>All content on this platform is protected by intellectual property rights. Users may not:</p>
-                <ul>
-                    <li>Copy or reproduce any content without permission</li>
-                    <li>Use the platform for commercial purposes</li>
-                    <li>Modify or create derivative works</li>
-                    <li>Distribute or share access to the platform</li>
-                </ul>
+                    <h2><i class="fas fa-sync nautical-icon"></i>Changes to Terms</h2>
+                    <p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the new terms.</p>
 
-                <h3>Changes to Terms</h3>
-                <p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the new terms.</p>
-
-                <h3>Contact Information</h3>
-                <p>For questions regarding these terms or the platform, please contact us through the appropriate channels.</p>
+                    <h2><i class="fas fa-envelope nautical-icon"></i>Contact Information</h2>
+                    <p>For questions regarding these terms or the platform, please contact us through the appropriate channels.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -142,6 +236,7 @@
     <footer class="py-4">
         <div class="container text-center">
             <p class="mb-2">© 2024 Rule Ready. All rights reserved.</p>
+            <p class="mb-0"><a href="/policy">Privacy Policy & Disclaimer</a></p>
         </div>
     </footer>
 

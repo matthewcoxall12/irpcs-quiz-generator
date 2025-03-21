@@ -55,16 +55,24 @@
             padding: 120px 0;
             margin-bottom: 50px;
             position: relative;
+            overflow: hidden;
         }
 
-        .hero-section::after {
+        .hero-section::before {
             content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 50px;
-            background: linear-gradient(to bottom right, var(--primary-blue) 49%, transparent 51%);
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1513828583688-c52646db42da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover;
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .hero-section h1 {
@@ -77,6 +85,43 @@
             font-size: 1.25rem;
             font-weight: 400;
             margin-bottom: 2rem;
+        }
+
+        .nautical-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .nautical-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .nautical-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .nautical-icon:nth-child(2) { top: 30%; right: 15%; animation-delay: 1s; }
+        .nautical-icon:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+        .nautical-icon:nth-child(4) { bottom: 30%; right: 25%; animation-delay: 3s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .wave-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to bottom right, var(--primary-blue) 49%, transparent 51%);
         }
 
         .feature-card {
@@ -147,7 +192,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Rule Ready</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-ship"></i> Rule Ready</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -168,30 +213,39 @@
     </nav>
 
     <div class="hero-section text-center py-5">
-        <h1 class="display-4">Welcome to Rule Ready</h1>
-        <p class="lead">Master the International Regulations for Preventing Collisions at Sea with our comprehensive quiz system</p>
-        <a href="/quiz" class="btn btn-primary btn-lg">Start Quiz Now</a>
+        <div class="nautical-decoration">
+            <i class="fas fa-ship nautical-icon"></i>
+            <i class="fas fa-compass nautical-icon"></i>
+            <i class="fas fa-anchor nautical-icon"></i>
+            <i class="fas fa-chart-line nautical-icon"></i>
+        </div>
+        <div class="hero-content">
+            <h1 class="display-4">Welcome to Rule Ready</h1>
+            <p class="lead">Master the International Regulations for Preventing Collisions at Sea with our comprehensive quiz system</p>
+            <a href="/quiz" class="btn btn-primary btn-lg">Start Quiz Now</a>
+        </div>
+        <div class="wave-decoration"></div>
     </div>
 
     <div class="container mb-5">
         <div class="row">
             <div class="col-md-4">
                 <div class="feature-card p-4 text-center">
-                    <div class="feature-icon">📝</div>
+                    <div class="feature-icon"><i class="fas fa-compass"></i></div>
                     <h3>Custom Quizzes</h3>
                     <p>Generate personalized quizzes based on your learning needs and preferences.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card p-4 text-center">
-                    <div class="feature-icon">💾</div>
+                    <div class="feature-icon"><i class="fas fa-anchor"></i></div>
                     <h3>Save Progress</h3>
                     <p>Track your performance and save quizzes for future reference.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card p-4 text-center">
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>Performance Analytics</h3>
                     <p>Get detailed insights into your quiz performance and areas for improvement.</p>
                 </div>
