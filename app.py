@@ -63,15 +63,19 @@ def create_word_document(questions, title="IRPCS Quiz", show_answers=False):
 def home():
     return render_template('home.html')
 
-@app.route('/quiz')
-def quiz():
-    return render_template('quiz.html')
+@app.route('/generate_quiz')
+def generate_quiz_page():
+    return render_template('generate_quiz.html')
+
+@app.route('/online_quiz')
+def online_quiz():
+    return render_template('online_quiz.html')
 
 @app.route('/rules')
 def rules():
     return render_template('rules.html')
 
-@app.route('/saved-quizzes')
+@app.route('/saved_quizzes')
 def saved_quizzes():
     return render_template('saved_quizzes.html')
 
