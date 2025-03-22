@@ -7,6 +7,7 @@ from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import json
 from flask_talisman import Talisman
+from models import db, Section, Question, Answer, Quiz, QuizQuestion, Tag, User, UserProgress
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
@@ -379,6 +380,17 @@ def get_rules():
             return jsonify({"error": "Invalid rule number"}), 400
     
     return jsonify(rules_data)
+
+@app.route('/api/sections')
+def get_sections():
+    """Get all rule sections"""
+    sections = Section.query.all()
+    return jsonify([{
+        'id': section.id,
+        'name': section.name,
+        'description': section.description,
+        'rule_range': section.rule_range
+    } for section in sections])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000))) 

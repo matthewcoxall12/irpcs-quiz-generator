@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}Configure Quiz - Rule Ready{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Configure your IRPCS quiz with options for difficulty, length, rule sections, and question types.">
+{% endblock %}
+
+{% block styles %}
+<style>
+    .configuration-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        background-color: #fff;
+    }
+    
+    .config-section {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .config-section:last-child {
+        border-bottom: none;
+    }
+    
+    .config-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #1a3f66;
+    }
+    
+    .btn-generate {
+        background-color: #1a3f66;
+        color: white;
+        font-weight: 600;
+        padding: 10px 25px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+    
+    .btn-generate:hover {
+        background-color: #12294d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .section-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .section-card:hover {
+        border-color: #1a3f66;
+        background-color: #f8f9fa;
+    }
+    
+    .section-card.selected {
+        background-color: #e8f0fe;
+        border-color: #1a3f66;
+    }
+    
+    .section-card .rule-range {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .difficulty-btn {
+        padding: 8px 15px;
+        border-radius: 20px;
+        margin-right: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        transition: all 0.2s;
+    }
+    
+    .difficulty-btn.selected {
+        background-color: #1a3f66;
+        color: white;
+        border-color: #1a3f66;
+    }
+    
+    .config-helper {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    
+    .question-type-check {
+        margin-right: 10px;
+    }
+    
+    .question-type-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .difficulty-btn {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Configure Your Quiz</h1>
+            <p class="lead mb-4">Customize your quiz settings to focus on specific areas of the IRPCS regulations or to challenge yourself with different difficulty levels.</p>
+            
+            <form id="quizConfigForm">
+                <div class="configuration-card">
+                    <!-- Quiz Name and Description -->
+                    <div class="config-section">
+                        <h3 class="config-title">Quiz Details</h3>
+                        <div class="mb-3">
+                            <label for="quizName" class="form-label">Quiz Name</label>
+                            <input type="text" class="form-control" id="quizName" name="name" placeholder="e.g., IRPCS Lights and Shapes Practice">
+                            <div class="config-helper">Give your quiz a descriptive name to help you identify it later.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quizDescription" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" id="quizDescription" name="description" rows="2" placeholder="Add details about the focus or purpose of this quiz"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Quiz Length -->
+                    <div class="config-section">
+                        <h3 class="config-title">Quiz Length</h3>
+                        <div class="mb-3">
+                            <label for="quizLength" class="form-label">Number of Questions</label>
+                            <input type="range" class="form-range" id="quizLength" name="length" min="5" max="50" step="5" value="10">
+                            <div class="d-flex justify-content-between">
+                                <span>5</span>
+                                <span id="lengthValue">10</span>
+                                <span>50</span>
+                            </div>
+                            <div class="config-helper">Adjust the slider to set how many questions you want in your quiz.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Difficulty Level -->
+                    <div class="config-section">
+                        <h3 class="config-title">Difficulty Level</h3>
+                        <div class="mb-3">
+                            <div class="difficulty-options">
+                                <button type="button" class="difficulty-btn selected" data-difficulty="mixed">Mixed</button>
+                                <button type="button" class="difficulty-btn" data-difficulty="easy">Easy</button>
+                                <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
+                                <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
+                                <button type="button" class="difficulty-btn" data-difficulty="adaptive">Adaptive</button>
+                            </div>
+                            <input type="hidden" id="difficultyLevel" name="difficulty" value="mixed">
+                            <div class="config-helper mt-2">
+                                <strong>Mixed:</strong> Includes questions from all difficulty levels.<br>
+                                <strong>Adaptive:</strong> Adjusts difficulty based on your previous performance (requires login).
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rule Sections -->
+                    <div class="config-section">
+                        <h3 class="config-title">Rule Sections</h3>
+                        <div class="mb-3">
+                            <div class="section-options">
+                                <div class="section-card selected" data-section="all">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">All Sections</h5>
+                                        <span class="rule-range">Rules 1-41</span>
+                                    </div>
+                                    <p class="mb-0 mt-2">Include questions from all IRPCS rule sections</p>
+                                </div>
+                                
+                                {% for section in sections %}
+                                <div class="section-card" data-section="{{ section.id }}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">{{ section.name }}</h5>
+                                        <span class="rule-range">{{ section.rule_range }}</span>
+                                    </div>
+                                    <p class="mb-0 mt-2">{{ section.description }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" id="sectionFocus" name="section_focus" value="all">
+                            <div class="config-helper mt-2">Click on multiple sections to focus on specific rules, or select "All Sections" for a comprehensive quiz.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question Types -->
+                    <div class="config-section">
+                        <h3 class="config-title">Question Types</h3>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="question-type-label">
+                                        <input type="checkbox" class="question-type-check" id="typeMultipleChoice" name="question_types" value="Multiple Choice" checked>
+                                        <label for="typeMultipleChoice">Multiple Choice</label>
+                                    </div>
+                                    <div class="question-type-label">
+                                        <input type="checkbox" class="question-type-check" id="typeShortAnswer" name="question_types" value="Short Answer" checked>
+                                        <label for="typeShortAnswer">Short Answer</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="question-type-label">
+                                        <input type="checkbox" class="question-type-check" id="typeFillBlank" name="question_types" value="Fill in the Blank" checked>
+                                        <label for="typeFillBlank">Fill in the Blank</label>
+                                    </div>
+                                    <div class="question-type-label">
+                                        <input type="checkbox" class="question-type-check" id="typeScenario" name="question_types" value="Scenario" checked>
+                                        <label for="typeScenario">Scenario-based</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="config-helper">Select the types of questions you want included in your quiz.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="config-section text-center">
+                        <button type="submit" class="btn btn-generate">Generate Quiz</button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Loading Spinner (shown when generating) -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Generating your quiz... This may take a moment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update length value display
+        const lengthSlider = document.getElementById('quizLength');
+        const lengthValue = document.getElementById('lengthValue');
+        
+        lengthSlider.addEventListener('input', function() {
+            lengthValue.textContent = this.value;
+        });
+        
+        // Handle difficulty selection
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const difficultyInput = document.getElementById('difficultyLevel');
+        
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                difficultyBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                difficultyInput.value = this.dataset.difficulty;
+            });
+        });
+        
+        // Handle section selection
+        const sectionCards = document.querySelectorAll('.section-card');
+        const sectionInput = document.getElementById('sectionFocus');
+        
+        sectionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.dataset.section === 'all') {
+                    // If "All Sections" is clicked, deselect other sections
+                    sectionCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    sectionInput.value = 'all';
+                } else {
+                    // If a specific section is clicked
+                    const allSectionsCard = document.querySelector('.section-card[data-section="all"]');
+                    allSectionsCard.classList.remove('selected');
+                    
+                    // Toggle this section's selection
+                    this.classList.toggle('selected');
+                    
+                    // Update hidden input with selected sections
+                    const selectedSections = Array.from(document.querySelectorAll('.section-card.selected:not([data-section="all"])'))
+                        .map(c => c.dataset.section);
+                    
+                    if (selectedSections.length === 0) {
+                        // If no specific sections are selected, reselect "All Sections"
+                        allSectionsCard.classList.add('selected');
+                        sectionInput.value = 'all';
+                    } else {
+                        sectionInput.value = selectedSections.join(',');
+                    }
+                }
+            });
+        });
+        
+        // Handle form submission
+        const quizForm = document.getElementById('quizConfigForm');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        quizForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+            quizForm.style.display = 'none';
+            
+            // Get selected question types
+            const selectedTypes = Array.from(document.querySelectorAll('input[name="question_types"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            // Build form data
+            const formData = {
+                name: document.getElementById('quizName').value || `Quiz ${new Date().toLocaleString()}`,
+                description: document.getElementById('quizDescription').value || '',
+                length: parseInt(document.getElementById('quizLength').value),
+                difficulty: document.getElementById('difficultyLevel').value,
+                section_focus: document.getElementById('sectionFocus').value,
+                question_types: selectedTypes.join(',')
+            };
+            
+            // Send request to generate quiz
+            fetch('/api/quiz/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store quiz data in session storage for quiz page to access
+                    sessionStorage.setItem('currentQuiz', JSON.stringify(data.quiz));
+                    
+                    // Redirect to quiz page
+                    if (data.quiz_id) {
+                        window.location.href = `/quiz/take/${data.quiz_id}`;
+                    } else {
+                        window.location.href = '/quiz';
+                    }
+                } else {
+                    // Handle error
+                    alert('Error generating quiz: ' + (data.message || 'Please try again'));
+                    loadingSpinner.style.display = 'none';
+                    quizForm.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while generating the quiz. Please try again.');
+                loadingSpinner.style.display = 'none';
+                quizForm.style.display = 'block';
+            });
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,598 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Rule Ready{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Track your IRPCS learning progress, view quiz history, and see personalized recommendations.">
+{% endblock %}
+
+{% block styles %}
+<style>
+    .dashboard-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 30px;
+    }
+    
+    .dashboard-welcome {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+    
+    .dashboard-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 25px;
+        background-color: white;
+        transition: transform 0.2s;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a3f66;
+        margin-bottom: 0;
+    }
+    
+    .chart-container {
+        height: 300px;
+        margin-bottom: 15px;
+    }
+    
+    .progress-overview {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    
+    .progress-item {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .progress-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a3f66;
+    }
+    
+    .progress-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .mastery-progress {
+        height: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .rule-mastery {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .rule-info {
+        flex: 1;
+    }
+    
+    .rule-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .rule-stats {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .rule-progress {
+        width: 150px;
+        margin-left: 15px;
+    }
+    
+    .quiz-item {
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+    }
+    
+    .quiz-item:last-child {
+        border-bottom: none;
+    }
+    
+    .quiz-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .quiz-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .quiz-score {
+        font-weight: 600;
+    }
+    
+    .score-low {
+        color: #dc3545;
+    }
+    
+    .score-medium {
+        color: #ffc107;
+    }
+    
+    .score-high {
+        color: #28a745;
+    }
+    
+    .recommendation-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .recommendation-item {
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #1a3f66;
+        background-color: #e8f0fe;
+        border-radius: 0 5px 5px 0;
+    }
+    
+    .recommendation-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .rule-search {
+        margin-bottom: 20px;
+    }
+    
+    .rule-category {
+        margin-bottom: 15px;
+    }
+    
+    .category-title {
+        font-weight: 600;
+        color: #1a3f66;
+        margin-bottom: 10px;
+    }
+    
+    .rule-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .rule-pill {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background-color: #f8f9fa;
+        color: #495057;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    
+    .rule-pill:hover {
+        background-color: #e8f0fe;
+        color: #1a3f66;
+        text-decoration: none;
+    }
+    
+    .mastery-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+    
+    .mastery-low {
+        background-color: #dc3545;
+    }
+    
+    .mastery-medium {
+        background-color: #ffc107;
+    }
+    
+    .mastery-high {
+        background-color: #28a745;
+    }
+    
+    .mastery-none {
+        background-color: #6c757d;
+    }
+    
+    @media (max-width: 768px) {
+        .progress-overview {
+            flex-direction: column;
+        }
+        
+        .progress-item {
+            margin-bottom: 15px;
+        }
+        
+        .rule-mastery {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .rule-progress {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>Your Learning Dashboard</h1>
+            {% if user %}
+                <div class="dashboard-welcome">Welcome back, {{ user.username }}! Here's your learning progress.</div>
+            {% else %}
+                <div class="dashboard-welcome">Welcome to your dashboard! Sign in to track your progress.</div>
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Overall Progress -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Overall Progress</h2>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="progressTimeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Last 30 Days
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="progressTimeDropdown">
+                                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="#">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-overview">
+                        <div class="progress-item">
+                            <div class="progress-value">{{ user.stats.quizzes_taken if user else '0' }}</div>
+                            <div class="progress-label">Quizzes Taken</div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-value">{{ user.stats.questions_answered if user else '0' }}</div>
+                            <div class="progress-label">Questions Answered</div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-value">{{ user.stats.success_rate|round(1) if user else '0' }}%</div>
+                            <div class="progress-label">Success Rate</div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-value">{{ user.stats.average_score|round(1) if user else '0' }}%</div>
+                            <div class="progress-label">Average Score</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Chart -->
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Rule Mastery -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Rule Mastery</h2>
+                        <button class="btn btn-sm btn-outline-primary" id="focusWeakAreasBtn">Focus on Weak Areas</button>
+                    </div>
+                    
+                    {% if user and progress %}
+                        <div class="rule-search mb-3">
+                            <input type="text" class="form-control" id="ruleSearch" placeholder="Search for a specific rule...">
+                        </div>
+                        
+                        <div id="masteryList">
+                            {% for rule_progress in progress %}
+                                {% set mastery_level = rule_progress.mastery_level * 100 %}
+                                <div class="rule-mastery" data-rule="{{ rule_progress.rule_number }}">
+                                    <div class="rule-info">
+                                        <div class="rule-name">{{ rule_progress.rule_number }}</div>
+                                        <div class="rule-stats">{{ rule_progress.questions_correct }} correct out of {{ rule_progress.questions_attempted }} attempts</div>
+                                    </div>
+                                    <div class="rule-progress">
+                                        <div class="progress mastery-progress">
+                                            <div class="progress-bar {% if mastery_level < 40 %}bg-danger{% elif mastery_level < 70 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ mastery_level }}%" 
+                                                 aria-valuenow="{{ mastery_level }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <small>{{ mastery_level|round(1) }}% Mastery</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>No mastery data available yet. Complete quizzes to track your progress on specific rules.</p>
+                            <a href="/quiz/config" class="btn btn-primary mt-2">Take a Quiz</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Recent Quizzes -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Quizzes</h2>
+                        <a href="/quiz/history" class="btn btn-sm btn-outline-secondary">View All</a>
+                    </div>
+                    
+                    {% if user and quizzes %}
+                        <div>
+                            {% for quiz in quizzes %}
+                                <div class="quiz-item">
+                                    <div class="quiz-title">{{ quiz.name }}</div>
+                                    <div class="quiz-meta">
+                                        <span>{{ quiz.created_at.strftime('%d %b %Y, %H:%M') }}</span>
+                                        <span class="quiz-score {% if quiz.score < 50 %}score-low{% elif quiz.score < 75 %}score-medium{% else %}score-high{% endif %}">
+                                            {{ quiz.score }}%
+                                        </span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a href="/quiz/results/{{ quiz.id }}" class="btn btn-sm btn-outline-primary">View Results</a>
+                                        <a href="/quiz/retry/{{ quiz.id }}" class="btn btn-sm btn-outline-secondary">Retry Quiz</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>No quiz history available yet. Take a quiz to see your results here.</p>
+                            <a href="/quiz/config" class="btn btn-primary mt-2">Take a Quiz</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Recommendations -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recommendations</h2>
+                    </div>
+                    
+                    {% if user and user.recommendations %}
+                        <ul class="recommendation-list">
+                            {% for recommendation in user.recommendations %}
+                                <li class="recommendation-item">
+                                    <div class="recommendation-title">{{ recommendation.title }}</div>
+                                    <p class="mb-0">{{ recommendation.description }}</p>
+                                    
+                                    {% if recommendation.action_url %}
+                                        <a href="{{ recommendation.action_url }}" class="btn btn-sm btn-outline-primary mt-2">{{ recommendation.action_text }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>Take more quizzes to receive personalized recommendations based on your performance.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Quick Access -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Quick Access</h2>
+                    </div>
+                    
+                    <div class="rule-category">
+                        <div class="category-title">Part A - General</div>
+                        <div class="rule-pills">
+                            {% for i in range(1, 4) %}
+                                {% set rule_number = "Rule " ~ i %}
+                                {% set mastery = get_mastery_level(user, rule_number) if user else 0 %}
+                                <a href="/rules#rule{{ i }}" class="rule-pill">
+                                    <span class="mastery-indicator {% if mastery == 0 %}mastery-none{% elif mastery < 0.4 %}mastery-low{% elif mastery < 0.7 %}mastery-medium{% else %}mastery-high{% endif %}"></span>
+                                    Rule {{ i }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="rule-category">
+                        <div class="category-title">Part B - Steering & Sailing</div>
+                        <div class="rule-pills">
+                            {% for i in range(4, 20) %}
+                                {% set rule_number = "Rule " ~ i %}
+                                {% set mastery = get_mastery_level(user, rule_number) if user else 0 %}
+                                <a href="/rules#rule{{ i }}" class="rule-pill">
+                                    <span class="mastery-indicator {% if mastery == 0 %}mastery-none{% elif mastery < 0.4 %}mastery-low{% elif mastery < 0.7 %}mastery-medium{% else %}mastery-high{% endif %}"></span>
+                                    Rule {{ i }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="rule-category">
+                        <div class="category-title">Part C - Lights & Shapes</div>
+                        <div class="rule-pills">
+                            {% for i in range(20, 32) %}
+                                {% set rule_number = "Rule " ~ i %}
+                                {% set mastery = get_mastery_level(user, rule_number) if user else 0 %}
+                                <a href="/rules#rule{{ i }}" class="rule-pill">
+                                    <span class="mastery-indicator {% if mastery == 0 %}mastery-none{% elif mastery < 0.4 %}mastery-low{% elif mastery < 0.7 %}mastery-medium{% else %}mastery-high{% endif %}"></span>
+                                    Rule {{ i }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Actions</h2>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/quiz/config" class="btn btn-primary">Take New Quiz</a>
+                        <a href="/rules" class="btn btn-outline-primary">Study Rules</a>
+                        {% if user %}
+                            <a href="/profile/settings" class="btn btn-outline-secondary">Account Settings</a>
+                        {% else %}
+                            <a href="/login" class="btn btn-outline-secondary">Sign In to Track Progress</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Progress Chart
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        
+        // Sample data - this would be replaced with real user data
+        const dates = [{% for date in user.stats.dates if user %}{{ date|tojson }},{% endfor %}];
+        const scores = [{% for score in user.stats.scores if user %}{{ score }},{% endfor %}];
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates.length > 0 ? dates : ['No data available'],
+                datasets: [{
+                    label: 'Quiz Scores',
+                    data: scores.length > 0 ? scores : [0],
+                    backgroundColor: 'rgba(26, 63, 102, 0.2)',
+                    borderColor: 'rgba(26, 63, 102, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    pointBackgroundColor: 'rgba(26, 63, 102, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Score (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Rule search functionality
+        const ruleSearch = document.getElementById('ruleSearch');
+        if (ruleSearch) {
+            ruleSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rules = document.querySelectorAll('.rule-mastery');
+                
+                rules.forEach(rule => {
+                    const ruleName = rule.dataset.rule.toLowerCase();
+                    if (ruleName.includes(searchTerm)) {
+                        rule.style.display = 'flex';
+                    } else {
+                        rule.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Focus on weak areas button
+        const focusWeakAreasBtn = document.getElementById('focusWeakAreasBtn');
+        if (focusWeakAreasBtn) {
+            focusWeakAreasBtn.addEventListener('click', function() {
+                // Create a focused quiz configuration
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/quiz/config';
+                
+                // Add fields for weak areas focus
+                const lengthInput = document.createElement('input');
+                lengthInput.type = 'hidden';
+                lengthInput.name = 'length';
+                lengthInput.value = '10';
+                
+                const difficultyInput = document.createElement('input');
+                difficultyInput.type = 'hidden';
+                difficultyInput.name = 'difficulty';
+                difficultyInput.value = 'adaptive';
+                
+                const focusInput = document.createElement('input');
+                focusInput.type = 'hidden';
+                focusInput.name = 'focus_weak_areas';
+                focusInput.value = 'true';
+                
+                // Add inputs to form
+                form.appendChild(lengthInput);
+                form.appendChild(difficultyInput);
+                form.appendChild(focusInput);
+                
+                // Submit form
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+    });
+</script>
+{% endblock %} 

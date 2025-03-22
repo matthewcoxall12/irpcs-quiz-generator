@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results - Rule Ready{% endblock %}
+
+{% block meta %}
+<meta name="description" content="View your IRPCS quiz results, see detailed feedback, and get personalized learning recommendations.">
+{% endblock %}
+
+{% block styles %}
+<style>
+    .results-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .results-score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #1a3f66;
+        margin-bottom: 10px;
+    }
+    
+    .score-insufficient {
+        color: #dc3545;
+    }
+    
+    .score-sufficient {
+        color: #ffc107;
+    }
+    
+    .score-good {
+        color: #28a745;
+    }
+    
+    .score-excellent {
+        color: #1a3f66;
+    }
+    
+    .results-feedback {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .summary-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 30px;
+        background-color: white;
+    }
+    
+    .summary-stats {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        min-width: 150px;
+    }
+    
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a3f66;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .recommendations-section {
+        margin-bottom: 30px;
+    }
+    
+    .recommendation-card {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        background-color: #e8f0fe;
+        border-left: 4px solid #1a3f66;
+    }
+    
+    .recommendation-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .questions-review {
+        margin-top: 40px;
+    }
+    
+    .question-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 25px;
+        background-color: white;
+    }
+    
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .question-number {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .result-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .badge-correct {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-incorrect {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    
+    .answer-section {
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    
+    .user-answer {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+    }
+    
+    .user-answer.correct {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    
+    .user-answer.incorrect {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .correct-answer {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    
+    .explanation {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #e8f0fe;
+        border-left: 4px solid #1a3f66;
+        font-style: italic;
+    }
+    
+    .rule-reference {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-left: 4px solid #1a3f66;
+    }
+    
+    .rule-link {
+        margin-top: 10px;
+    }
+    
+    .chart-container {
+        height: 300px;
+        margin-bottom: 30px;
+    }
+    
+    .action-buttons {
+        margin: 30px 0;
+        text-align: center;
+    }
+    
+    .btn-action {
+        margin: 0 10px 10px 0;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .summary-stats {
+            flex-direction: column;
+        }
+        
+        .stat-item {
+            width: 100%;
+            padding: 10px 0;
+        }
+        
+        .question-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .result-badge {
+            margin-top: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="results-container">
+        <!-- Results Header -->
+        <div class="results-header">
+            <h1>Quiz Results</h1>
+            <div class="results-score {% if quiz.score_percentage < 50 %}score-insufficient{% elif quiz.score_percentage < 70 %}score-sufficient{% elif quiz.score_percentage < 90 %}score-good{% else %}score-excellent{% endif %}">
+                {{ quiz.score_percentage|round(1) }}%
+            </div>
+            <div class="results-feedback">
+                {% if quiz.score_percentage < 50 %}
+                    You need more practice with the IRPCS rules.
+                {% elif quiz.score_percentage < 70 %}
+                    You have a basic understanding of the IRPCS rules.
+                {% elif quiz.score_percentage < 90 %}
+                    You have a good understanding of the IRPCS rules.
+                {% else %}
+                    Excellent! You have mastered the IRPCS rules.
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Summary Card -->
+        <div class="summary-card">
+            <h2 class="mb-4">Quiz Summary</h2>
+            
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <div class="stat-value">{{ quiz.correct_count }}/{{ quiz.total_questions }}</div>
+                    <div class="stat-label">Questions Answered Correctly</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ quiz.total_marks_achieved }}/{{ quiz.total_possible_marks }}</div>
+                    <div class="stat-label">Total Marks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ quiz.completion_time }}</div>
+                    <div class="stat-label">Completion Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ quiz.average_time_per_question }}s</div>
+                    <div class="stat-label">Average Time per Question</div>
+                </div>
+            </div>
+            
+            <!-- Performance Chart -->
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Recommendations Section -->
+        <div class="recommendations-section">
+            <h2 class="mb-4">Recommendations</h2>
+            
+            {% if quiz.recommendations %}
+                {% for recommendation in quiz.recommendations %}
+                    <div class="recommendation-card">
+                        <div class="recommendation-title">{{ recommendation.title }}</div>
+                        <p>{{ recommendation.description }}</p>
+                        
+                        {% if recommendation.type == 'review' and recommendation.rules %}
+                            <div class="mt-2">
+                                <strong>Focus on these rules:</strong>
+                                <ul class="mb-0 mt-2">
+                                    {% for rule in recommendation.rules %}
+                                        <li><a href="/rules#rule{{ rule.split()[-1] }}">{{ rule }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        {% if recommendation.type == 'practice' and recommendation.config %}
+                            <div class="mt-3">
+                                <form action="/quiz/config" method="POST">
+                                    {% for key, value in recommendation.config.items() %}
+                                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                                    {% endfor %}
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Practice Now</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No specific recommendations at this time.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/quiz/config" class="btn btn-primary btn-action">Take Another Quiz</a>
+            <a href="/rules" class="btn btn-outline-primary btn-action">Review Rules</a>
+            {% if is_logged_in %}
+                <a href="/dashboard" class="btn btn-outline-secondary btn-action">View Progress</a>
+            {% endif %}
+        </div>
+        
+        <!-- Questions Review -->
+        <div class="questions-review">
+            <h2 class="mb-4">Question Review</h2>
+            
+            {% for question in quiz.questions %}
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">Question {{ loop.index }}</div>
+                        <div class="result-badge {% if question.is_correct %}badge-correct{% else %}badge-incorrect{% endif %}">
+                            {% if question.is_correct %}Correct{% else %}Incorrect{% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="question-text">{{ question.question }}</div>
+                    
+                    <div class="answer-section user-answer {% if question.is_correct %}correct{% else %}incorrect{% endif %}">
+                        <strong>Your Answer:</strong> {{ question.user_answer if question.user_answer else "(No answer provided)" }}
+                    </div>
+                    
+                    {% if not question.is_correct %}
+                        <div class="answer-section correct-answer">
+                            <strong>Correct Answer:</strong> {{ question.correct_answer }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="explanation">
+                        <strong>Explanation:</strong> {{ question.explanation }}
+                    </div>
+                    
+                    <div class="rule-reference">
+                        <strong>Rule Reference:</strong> {{ question.rule_reference }}
+                        <div class="rule-link">
+                            <a href="/rules#rule{{ question.rule_reference.split()[-1] }}" class="btn btn-sm btn-outline-primary">
+                                Read {{ question.rule_reference }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Performance chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        // Prepare data for chart
+        const sectionData = {{ quiz.section_performance|tojson }};
+        const sections = Object.keys(sectionData);
+        const scores = Object.values(sectionData).map(val => val.percentage);
+        const attempts = Object.values(sectionData).map(val => val.attempts);
+        
+        // Create color array with different shades of blue
+        const backgroundColors = [
+            'rgba(26, 63, 102, 0.8)',
+            'rgba(31, 86, 143, 0.8)',
+            'rgba(38, 116, 191, 0.8)',
+            'rgba(79, 146, 209, 0.8)',
+            'rgba(149, 189, 226, 0.8)'
+        ];
+        
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: sections,
+                datasets: [{
+                    label: 'Performance by Section (%)',
+                    data: scores,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors.map(color => color.replace('0.8', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Score (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Rule Section'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                const sectionIndex = context.dataIndex;
+                                return `Questions attempted: ${attempts[sectionIndex]}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 
