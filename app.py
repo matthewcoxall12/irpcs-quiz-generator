@@ -1,15 +1,36 @@
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, session
 from quiz_generator import generate_quiz
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import json
+from flask_talisman import Talisman
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 app.config['QUIZZES_DIR'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quizzes')
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+
+# Add security headers with Talisman
+talisman = Talisman(
+    app,
+    content_security_policy={
+        'default-src': ["'self'", 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
+        'img-src': ["'self'", 'data:', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
+        'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
+        'style-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
+        'font-src': ["'self'", 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com']
+    },
+    force_https=True,
+    strict_transport_security=True,
+    session_cookie_secure=True,
+    session_cookie_http_only=True
+)
 
 # Ensure quizzes directory exists
 os.makedirs(app.config['QUIZZES_DIR'], exist_ok=True)
@@ -179,6 +200,43 @@ def delete_quiz(quiz_id):
 @app.route('/policy')
 def policy():
     return render_template('policy.html')
+
+@app.route('/api/rules')
+def get_rules():
+    # This would ideally come from a database, but for now we'll return a static JSON
+    rules = [
+        {
+            "number": "1",
+            "title": "Application",
+            "content": "These Rules shall apply to all vessels upon the high seas and in all waters connected therewith navigable by seagoing vessels."
+        },
+        {
+            "number": "2",
+            "title": "Responsibility",
+            "content": "Nothing in these Rules shall exonerate any vessel, or the owner, master, or crew thereof, from the consequences of any neglect to comply with these Rules or of the neglect of any precaution which may be required by the ordinary practice of seamen, or by the special circumstances of the case."
+        },
+        {
+            "number": "3",
+            "title": "General Definitions",
+            "content": "For the purpose of these Rules, except where the context otherwise requires: (a) The word 'vessel' includes every description of water craft, including non-displacement craft, WIG craft and seaplanes, used or capable of being used as a means of transportation on water."
+        },
+        {
+            "number": "5",
+            "title": "Look-out",
+            "content": "Every vessel shall at all times maintain a proper look-out by sight and hearing as well as by all available means appropriate in the prevailing circumstances and conditions so as to make a full appraisal of the situation and of the risk of collision."
+        },
+        {
+            "number": "6",
+            "title": "Safe Speed",
+            "content": "Every vessel shall at all times proceed at a safe speed so that she can take proper and effective action to avoid collision and be stopped within a distance appropriate to the prevailing circumstances and conditions."
+        },
+        {
+            "number": "7",
+            "title": "Risk of Collision",
+            "content": "Every vessel shall use all available means appropriate to the prevailing circumstances and conditions to determine if risk of collision exists. If there is any doubt such risk shall be deemed to exist."
+        }
+    ]
+    return jsonify({"rules": rules})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000))) 

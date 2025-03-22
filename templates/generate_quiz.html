@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rule Ready - Generate Quiz</title>
+    <meta name="description" content="Create customized IRPCS quizzes with our easy-to-use quiz generator. Choose difficulty levels, question types, and save or download your quiz.">
+    <meta name="keywords" content="IRPCS quiz, COLREGS quiz generator, maritime test creator, navigation rules assessment">
+    <meta name="author" content="Rule Ready">
+    <meta property="og:title" content="Rule Ready - Generate Custom IRPCS Quizzes">
+    <meta property="og:description" content="Create customized IRPCS quizzes with our easy-to-use quiz generator. Choose difficulty levels, question types, and save or download your quiz.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://irpcs-quiz-generator.onrender.com/generate_quiz">
+    <title>Rule Ready - Generate IRPCS Quiz</title>
+    <link rel="canonical" href="https://irpcs-quiz-generator.onrender.com/generate_quiz">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -250,6 +258,72 @@
                 width: 100%;
             }
         }
+        
+        /* Additional responsive breakpoints */
+        @media (max-width: 576px) {
+            .quiz-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .quiz-header p {
+                font-size: 0.9rem;
+            }
+            
+            .form-section h3 {
+                font-size: 1.2rem;
+            }
+            
+            .question-container {
+                padding: 1rem;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 991px) {
+            .quiz-generator {
+                max-width: 700px;
+            }
+        }
+        
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .quiz-generator {
+                max-width: 750px;
+            }
+        }
+        
+        /* Accessibility improvements */
+        .form-control:focus {
+            outline: 3px solid var(--secondary-blue);
+        }
+        
+        .btn:focus {
+            outline: 3px solid var(--secondary-blue);
+        }
+        
+        .option-item {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+        
+        .option-item::before {
+            content: '';
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid var(--secondary-blue);
+            border-radius: 4px;
+        }
+        
+        .correct-option::before {
+            background-color: var(--success-green);
+            content: '✓';
+            color: white;
+            text-align: center;
+            line-height: 1.2rem;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +352,15 @@
         </div>
     </nav>
 
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Generate Quiz</li>
+            </ol>
+        </nav>
+    </div>
+
     <div class="container">
         <div class="quiz-generator">
             <div class="quiz-header">
@@ -285,24 +368,26 @@
                 <p>Create a customized quiz based on the IRPCS rules</p>
             </div>
 
-            <form id="quizForm">
-                <div class="form-section">
-                    <h3>Quiz Settings</h3>
+            <form id="quizForm" aria-labelledby="quiz-form-title">
+                <div class="form-section" role="group" aria-labelledby="quiz-settings-heading">
+                    <h3 id="quiz-settings-heading">Quiz Settings</h3>
                     <div class="mb-3">
                         <label for="numQuestions" class="form-label">Number of Questions</label>
-                        <input type="number" class="form-control" id="numQuestions" min="1" max="50" value="10" required>
+                        <input type="number" class="form-control" id="numQuestions" min="1" max="50" value="10" required aria-describedby="numQuestionsHelp">
+                        <div id="numQuestionsHelp" class="form-text">Choose between 1 and 50 questions for your quiz.</div>
                     </div>
                     <div class="mb-3">
                         <label for="difficulty" class="form-label">Difficulty Level</label>
-                        <select class="form-control" id="difficulty" required>
+                        <select class="form-control" id="difficulty" required aria-describedby="difficultyHelp">
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
                         </select>
+                        <div id="difficultyHelp" class="form-text">Select the difficulty level for your quiz questions.</div>
                     </div>
                     <div class="mb-3">
                         <label for="ruleRange" class="form-label">Rule Range</label>
-                        <select class="form-control" id="ruleRange" required>
+                        <select class="form-control" id="ruleRange" required aria-describedby="ruleRangeHelp">
                             <option value="all">All Rules (1-41)</option>
                             <option value="general">General Rules (1-3)</option>
                             <option value="steering">Steering and Sailing Rules (4-19)</option>
@@ -310,30 +395,31 @@
                             <option value="signals">Sound and Light Signals (32-37)</option>
                             <option value="exemptions">Exemptions and Verification (38-41)</option>
                         </select>
+                        <div id="ruleRangeHelp" class="form-text">Select which IRPCS rules to include in your quiz.</div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-generate">
-                    <i class="fas fa-magic me-2"></i>Generate Quiz
+                <button type="submit" class="btn btn-generate" aria-label="Generate quiz with selected settings">
+                    <i class="fas fa-magic me-2" aria-hidden="true"></i>Generate Quiz
                 </button>
             </form>
 
-            <div class="loading-spinner">
+            <div class="loading-spinner" role="status" aria-live="polite">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <p class="mt-2">Generating your quiz...</p>
             </div>
 
-            <div class="generated-quiz">
-                <h3>Generated Quiz</h3>
+            <div class="generated-quiz" role="region" aria-labelledby="generated-quiz-heading" aria-live="polite">
+                <h3 id="generated-quiz-heading">Generated Quiz</h3>
                 <div id="questionsContainer"></div>
-                <div class="quiz-actions">
-                    <button class="btn btn-action btn-edit" onclick="editQuiz()">
-                        <i class="fas fa-edit me-2"></i>Edit Quiz
+                <div class="quiz-actions" role="group" aria-label="Quiz actions">
+                    <button class="btn btn-action btn-edit" onclick="editQuiz()" aria-label="Edit quiz">
+                        <i class="fas fa-edit me-2" aria-hidden="true"></i>Edit Quiz
                     </button>
-                    <button class="btn btn-action btn-download" onclick="downloadQuiz()">
-                        <i class="fas fa-download me-2"></i>Download Quiz
+                    <button class="btn btn-action btn-download" onclick="downloadQuiz()" aria-label="Download quiz">
+                        <i class="fas fa-download me-2" aria-hidden="true"></i>Download Quiz
                     </button>
                 </div>
             </div>
@@ -360,18 +446,22 @@
             };
             
             try {
-                const response = await fetch('/generate_quiz', {
+                const response = await fetch('/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({
+                        num_questions: parseInt(formData.numQuestions),
+                        difficulty: formData.difficulty,
+                        question_types: ['Multiple Choice', 'Fill in the Gap', 'Written Answer']
+                    })
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    displayQuestions(data.questions);
+                    displayQuestions(data.quiz);
                     loadingSpinner.classList.remove('show');
                     generatedQuiz.classList.add('show');
                 } else {
@@ -392,15 +482,32 @@
             questions.forEach((question, index) => {
                 const questionElement = document.createElement('div');
                 questionElement.className = 'question-container';
+                questionElement.setAttribute('role', 'region');
+                questionElement.setAttribute('aria-labelledby', `question-${index}-heading`);
+                
+                let optionsHtml = '';
+                if (question.type === 'Multiple Choice' && question.choices) {
+                    optionsHtml = `
+                        <ul class="options-list" role="radiogroup" aria-labelledby="question-${index}-heading">
+                            ${question.choices.map((option, optIndex) => `
+                                <li class="option-item ${option === question.answer ? 'correct-option' : ''}" role="radio" aria-checked="${option === question.answer}" tabindex="0">
+                                    ${option}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `;
+                } else if (question.type === 'Fill in the Gap' || question.type === 'Written Answer') {
+                    optionsHtml = `
+                        <div class="p-3 bg-light" role="textbox" aria-readonly="true" tabindex="0">
+                            <strong>Answer:</strong> ${question.answer}
+                        </div>
+                    `;
+                }
+                
                 questionElement.innerHTML = `
-                    <div class="question-text">Question ${index + 1}: ${question.question}</div>
-                    <ul class="options-list">
-                        ${question.options.map((option, optIndex) => `
-                            <li class="option-item ${optIndex === question.correct ? 'correct-option' : ''}">
-                                ${option}
-                            </li>
-                        `).join('')}
-                    </ul>
+                    <div class="question-text" id="question-${index}-heading">Question ${index + 1}: ${question.question}</div>
+                    ${optionsHtml}
+                    ${question.rule_reference ? `<div class="mt-2 text-muted" role="note"><small>Rule Reference: ${question.rule_reference}</small></div>` : ''}
                 `;
                 container.appendChild(questionElement);
             });
@@ -412,32 +519,89 @@
         }
 
         function downloadQuiz() {
-            const questions = Array.from(document.querySelectorAll('.question-container')).map(container => {
+            // Get quiz data from UI elements
+            const quizTitle = prompt('Enter a name for your quiz:', 'IRPCS Quiz') || 'IRPCS Quiz';
+            const quizDescription = prompt('Enter a description (optional):', '') || '';
+            
+            // Get quiz questions from the DOM
+            const questions = Array.from(document.querySelectorAll('.question-container')).map((container, index) => {
                 const questionText = container.querySelector('.question-text').textContent;
-                const options = Array.from(container.querySelectorAll('.option-item')).map(opt => opt.textContent);
-                const correct = options.findIndex(opt => opt.includes('✓'));
+                // Extract just the question text without the "Question X:" prefix
+                const cleanQuestion = questionText.replace(/^Question \d+: /, '');
+                
+                // Determine question type based on the content
+                let questionType = 'Multiple Choice';
+                let choices = [];
+                let answer = '';
+                
+                const optionsList = container.querySelector('.options-list');
+                if (optionsList) {
+                    choices = Array.from(optionsList.querySelectorAll('.option-item')).map(opt => opt.textContent.trim());
+                    // Find the correct answer (marked with the correct-option class)
+                    const correctOption = optionsList.querySelector('.correct-option');
+                    if (correctOption) {
+                        answer = correctOption.textContent.trim();
+                    }
+                } else {
+                    // This is a Fill in the Gap or Written Answer question
+                    const answerElement = container.querySelector('.bg-light');
+                    if (answerElement) {
+                        answer = answerElement.textContent.replace('Answer:', '').trim();
+                        questionType = cleanQuestion.includes('___') ? 'Fill in the Gap' : 'Written Answer';
+                    }
+                }
+                
+                // Get rule reference if available
+                const ruleRef = container.querySelector('.text-muted');
+                const ruleReference = ruleRef ? ruleRef.textContent.replace('Rule Reference:', '').trim() : '';
+                
                 return {
-                    question: questionText,
-                    options: options,
-                    correct: correct
+                    question: cleanQuestion,
+                    type: questionType,
+                    choices: questionType === 'Multiple Choice' ? choices : [],
+                    answer: answer,
+                    rule_reference: ruleReference || null
                 };
             });
 
-            const quizData = {
-                title: 'IRPCS Quiz',
-                date: new Date().toLocaleDateString(),
-                questions: questions
-            };
-
-            const blob = new Blob([JSON.stringify(quizData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'irpcs_quiz.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            // Save the quiz to the server
+            saveQuizToServer(quizTitle, quizDescription, questions);
+        }
+        
+        async function saveQuizToServer(name, description, quiz) {
+            try {
+                const loadingSpinner = document.querySelector('.loading-spinner');
+                loadingSpinner.classList.add('show');
+                
+                const response = await fetch('/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        description: description,
+                        quiz: quiz
+                    })
+                });
+                
+                const data = await response.json();
+                
+                loadingSpinner.classList.remove('show');
+                
+                if (data.success) {
+                    alert('Quiz saved successfully! You can access it from the Saved Quizzes page.');
+                    setTimeout(() => {
+                        window.location.href = '/saved_quizzes';
+                    }, 1000);
+                } else {
+                    alert('Error saving quiz: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while saving the quiz.');
+                document.querySelector('.loading-spinner').classList.remove('show');
+            }
         }
     </script>
 </body>

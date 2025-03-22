@@ -162,12 +162,21 @@
         </div>
     </nav>
 
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Saved Quizzes</li>
+            </ol>
+        </nav>
+    </div>
+
     <div class="container my-5">
-        <h1 class="mb-4"><i class="fas fa-anchor nautical-icon"></i>Saved Quizzes</h1>
+        <h1 class="mb-4"><i class="fas fa-anchor nautical-icon" aria-hidden="true"></i> Saved Quizzes</h1>
         
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card" role="region" aria-label="Saved quizzes list">
                     <div class="card-body">
                         <div id="savedQuizzesList">
                             <!-- Quizzes will be loaded here -->
@@ -190,6 +199,10 @@
                     <div class="mb-3">
                         <label for="quizName" class="form-label">Quiz Name</label>
                         <input type="text" class="form-control" id="quizName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quizDescription" class="form-label">Description (Optional)</label>
+                        <textarea class="form-control" id="quizDescription" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -216,37 +229,60 @@
         function loadSavedQuizzes() {
             fetch('/api/saved-quizzes')
                 .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const quizzesList = document.getElementById('savedQuizzesList');
-                        quizzesList.innerHTML = '';
-                        
-                        data.quizzes.forEach(quiz => {
-                            const quizCard = document.createElement('div');
-                            quizCard.className = 'card mb-3';
-                            quizCard.innerHTML = `
-                                <div class="card-body">
-                                    <h5 class="card-title">${quiz.name}</h5>
-                                    ${quiz.description ? `<p class="card-text">${quiz.description}</p>` : ''}
-                                    <p class="card-text"><small class="text-muted">Created: ${new Date(quiz.created_at).toLocaleString()}</small></p>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary btn-sm" onclick="downloadQuiz('${quiz.id}', 'student')">
-                                            <i class="fas fa-download"></i> Download Student Version
-                                        </button>
-                                        <button class="btn btn-success btn-sm" onclick="downloadQuiz('${quiz.id}', 'teacher')">
-                                            <i class="fas fa-download"></i> Download Teacher Version
-                                        </button>
-                                        <button class="btn btn-danger btn-sm" onclick="deleteQuiz('${quiz.id}')">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                            quizzesList.appendChild(quizCard);
-                        });
+                .then(quizzes => {
+                    const quizzesList = document.getElementById('savedQuizzesList');
+                    quizzesList.innerHTML = '';
+                    
+                    if (quizzes.length === 0) {
+                        quizzesList.innerHTML = `
+                            <div class="text-center py-5" role="status" aria-live="polite">
+                                <i class="fas fa-folder-open fa-3x text-muted mb-3" aria-hidden="true"></i>
+                                <h2 class="h4 text-muted">No quizzes saved yet</h2>
+                                <p>Generate and save quizzes to access them here.</p>
+                                <a href="/generate_quiz" class="btn btn-primary mt-3" role="button">
+                                    <i class="fas fa-plus-circle me-2" aria-hidden="true"></i>Create New Quiz
+                                </a>
+                            </div>
+                        `;
+                        return;
                     }
+                    
+                    quizzes.forEach((quiz, index) => {
+                        const quizCard = document.createElement('div');
+                        quizCard.className = 'card mb-3';
+                        quizCard.setAttribute('role', 'article');
+                        quizCard.setAttribute('aria-labelledby', `quiz-title-${index}`);
+                        
+                        quizCard.innerHTML = `
+                            <div class="card-body">
+                                <h2 class="h5 card-title" id="quiz-title-${index}">${quiz.name}</h2>
+                                ${quiz.description ? `<p class="card-text">${quiz.description}</p>` : ''}
+                                <p class="card-text"><small class="text-muted">Created: ${quiz.date}</small></p>
+                                <div class="btn-group" role="group" aria-label="Quiz actions">
+                                    <button class="btn btn-primary btn-sm" onclick="downloadQuiz('${quiz.id}', 'student')" aria-label="Download student version of ${quiz.name}">
+                                        <i class="fas fa-download" aria-hidden="true"></i> Download Student Version
+                                    </button>
+                                    <button class="btn btn-success btn-sm" onclick="downloadQuiz('${quiz.id}', 'teacher')" aria-label="Download teacher version of ${quiz.name}">
+                                        <i class="fas fa-download" aria-hidden="true"></i> Download Teacher Version
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuiz('${quiz.id}')" aria-label="Delete ${quiz.name}">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        quizzesList.appendChild(quizCard);
+                    });
                 })
-                .catch(error => console.error('Error loading saved quizzes:', error));
+                .catch(error => {
+                    console.error('Error loading saved quizzes:', error);
+                    document.getElementById('savedQuizzesList').innerHTML = `
+                        <div class="alert alert-danger" role="alert" aria-live="assertive">
+                            <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>
+                            Error loading saved quizzes. Please try again later.
+                        </div>
+                    `;
+                });
         }
 
         // Download quiz
