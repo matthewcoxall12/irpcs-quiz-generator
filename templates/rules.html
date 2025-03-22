@@ -1,441 +1,437 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rule Ready - IRPCS Rules</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #2c3e50;
-            --secondary-blue: #3498db;
-            --accent-blue: #2980b9;
-            --light-gray: #ecf0f1;
-            --dark-gray: #2c3e50;
-            --white: #ffffff;
-            --success-green: #27ae60;
-            --border-color: #e0e0e0;
-        }
+{% extends "base.html" %}
 
-        body {
-            background-color: var(--light-gray);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--dark-gray);
-            padding-top: 60px;
-        }
+{% block title %}IRPCS Rules Reference{% endblock %}
 
-        .navbar {
-            background-color: var(--primary-blue);
-            border-bottom: 3px solid var(--secondary-blue);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-        }
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rules.css') }}">
+{% endblock %}
 
-        .navbar-brand {
-            color: var(--white) !important;
-            font-weight: 600;
-            font-size: 1.5rem;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-link {
-            color: var(--white) !important;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--secondary-blue) !important;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            bottom: 0;
-            width: 300px;
-            background-color: var(--white);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            overflow-y: auto;
-            z-index: 1020;
-            padding: 20px;
-        }
-
-        .sidebar-section {
-            margin-bottom: 20px;
-        }
-
-        .sidebar-section h4 {
-            color: var(--primary-blue);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid var(--secondary-blue);
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-nav li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar-nav a {
-            color: var(--dark-gray);
-            text-decoration: none;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-nav a:hover {
-            background-color: var(--light-gray);
-            color: var(--secondary-blue);
-        }
-
-        .sidebar-nav a.active {
-            background-color: var(--secondary-blue);
-            color: var(--white);
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            margin-left: 300px;
-            padding: 20px;
-        }
-
-        .rule-section {
-            background-color: var(--white);
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .rule-section h2 {
-            color: var(--primary-blue);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--secondary-blue);
-        }
-
-        .rule-section h3 {
-            color: var(--primary-blue);
-            font-size: 1.4rem;
-            margin: 25px 0 15px;
-        }
-
-        .rule-section p {
-            line-height: 1.8;
-            color: #444;
-            margin-bottom: 15px;
-        }
-
-        .rule-section ul {
-            list-style-type: none;
-            padding-left: 20px;
-        }
-
-        .rule-section li {
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .rule-section li:before {
-            content: "•";
-            color: var(--secondary-blue);
-            font-weight: bold;
-            position: absolute;
-            left: -20px;
-        }
-
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--secondary-blue);
-            color: var(--white);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .back-to-top:hover {
-            background-color: var(--accent-blue);
-            transform: translateY(-3px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .toggle-sidebar {
-                display: block;
-            }
-        }
-
-        .toggle-sidebar {
-            display: none;
-            position: fixed;
-            top: 70px;
-            left: 20px;
-            z-index: 1021;
-            background-color: var(--secondary-blue);
-            color: var(--white);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Rule Content Specific Styles */
-        .rule-content {
-            margin-top: 20px;
-        }
-
-        .rule-content h4 {
-            color: var(--primary-blue);
-            font-size: 1.2rem;
-            margin: 20px 0 10px;
-        }
-
-        .rule-content .sub-section {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .rule-content .sub-section p {
-            margin-bottom: 10px;
-        }
-
-        .rule-content .sub-section ul {
-            margin-left: 20px;
-        }
-
-        .rule-content .sub-section li {
-            margin-bottom: 8px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">Rule Ready</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/generate_quiz">Generate Quiz</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/online_quiz">Online Quiz</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/rules">Rules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/saved_quizzes">Saved Quizzes</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">IRPCS Rules</li>
-            </ol>
-        </nav>
-    </div>
-    
+{% block content %}
     <div class="container my-5">
         <h1 class="mb-4" id="page-title">International Regulations for Preventing Collisions at Sea</h1>
         
         <div class="row">
             <div class="col-md-3 mb-4">
-                <div class="card rule-nav-card">
+                <div class="card rule-nav-card" id="rulesNavigation">
                     <div class="card-header">
                         <h2 class="h5 mb-0">Navigation</h2>
                     </div>
                     <div class="card-body p-0">
                         <nav class="nav flex-column rule-nav" aria-label="Rule navigation">
-                            <!-- Add aria attributes for accessibility -->
-                            <li><a href="#rule1">Rule 1 - Application</a></li>
-                            <li><a href="#rule2">Rule 2 - Responsibility</a></li>
-                            <li><a href="#rule3">Rule 3 - General Definitions</a></li>
+                            <div class="rule-nav-section">
+                                <h3 class="h6 px-3 pt-3 pb-2 mb-0">Part A - General</h3>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule1" class="nav-link">Rule 1 - Application</a></li>
+                                    <li><a href="#rule2" class="nav-link">Rule 2 - Responsibility</a></li>
+                                    <li><a href="#rule3" class="nav-link">Rule 3 - General Definitions</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-nav-section">
+                                <h3 class="h6 px-3 pt-3 pb-2 mb-0">Part B - Steering and Sailing Rules</h3>
+                                <h4 class="h6 px-3 py-1 mb-0 text-muted">Section I: Any Condition of Visibility</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule4" class="nav-link">Rule 4 - Application</a></li>
+                                    <li><a href="#rule5" class="nav-link">Rule 5 - Look-out</a></li>
+                                    <li><a href="#rule6" class="nav-link">Rule 6 - Safe Speed</a></li>
+                                    <li><a href="#rule7" class="nav-link">Rule 7 - Risk of Collision</a></li>
+                                    <li><a href="#rule8" class="nav-link">Rule 8 - Action to Avoid Collision</a></li>
+                                    <li><a href="#rule9" class="nav-link">Rule 9 - Narrow Channels</a></li>
+                                    <li><a href="#rule10" class="nav-link">Rule 10 - Traffic Separation Schemes</a></li>
+                                </ul>
+                                
+                                <h4 class="h6 px-3 py-1 mb-0 text-muted">Section II: Vessels in Sight</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule11" class="nav-link">Rule 11 - Application</a></li>
+                                    <li><a href="#rule12" class="nav-link">Rule 12 - Sailing Vessels</a></li>
+                                    <li><a href="#rule13" class="nav-link">Rule 13 - Overtaking</a></li>
+                                    <li><a href="#rule14" class="nav-link">Rule 14 - Head-on Situation</a></li>
+                                    <li><a href="#rule15" class="nav-link">Rule 15 - Crossing Situation</a></li>
+                                    <li><a href="#rule16" class="nav-link">Rule 16 - Action by Give-way Vessel</a></li>
+                                    <li><a href="#rule17" class="nav-link">Rule 17 - Action by Stand-on Vessel</a></li>
+                                    <li><a href="#rule18" class="nav-link">Rule 18 - Responsibilities Between Vessels</a></li>
+                                </ul>
+                                
+                                <h4 class="h6 px-3 py-1 mb-0 text-muted">Section III: Restricted Visibility</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule19" class="nav-link">Rule 19 - Conduct in Restricted Visibility</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-nav-section">
+                                <h3 class="h6 px-3 pt-3 pb-2 mb-0">Part C - Lights and Shapes</h3>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule20" class="nav-link">Rule 20 - Application</a></li>
+                                    <li><a href="#rule21" class="nav-link">Rule 21 - Definitions</a></li>
+                                    <li><a href="#rule22" class="nav-link">Rule 22 - Visibility of Lights</a></li>
+                                    <li><a href="#rule23" class="nav-link">Rule 23 - Power-driven Vessels Underway</a></li>
+                                    <li><a href="#rule24" class="nav-link">Rule 24 - Towing and Pushing</a></li>
+                                    <li><a href="#rule25" class="nav-link">Rule 25 - Sailing Vessels</a></li>
+                                    <li><a href="#rule26" class="nav-link">Rule 26 - Fishing Vessels</a></li>
+                                    <li><a href="#rule27" class="nav-link">Rule 27 - Vessels Not Under Command</a></li>
+                                    <li><a href="#rule28" class="nav-link">Rule 28 - Vessels Constrained by Draft</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-nav-section">
+                                <h3 class="h6 px-3 pt-3 pb-2 mb-0">Part D - Sound Signals</h3>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule29" class="nav-link">Rule 29 - Definitions</a></li>
+                                    <li><a href="#rule30" class="nav-link">Rule 30 - Sound Signals</a></li>
+                                    <li><a href="#rule31" class="nav-link">Rule 31 - Light Signals</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="rule-nav-section">
+                                <h3 class="h6 px-3 pt-3 pb-2 mb-0">Part E - Exemptions</h3>
+                                <ul class="list-unstyled">
+                                    <li><a href="#rule32" class="nav-link">Rule 32 - Exemptions</a></li>
+                                </ul>
+                            </div>
                         </nav>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-9">
-                <div class="rule-section">
-                    <h2>International Regulations for Preventing Collisions at Sea (IRPCS)</h2>
-                    <p>Welcome to the comprehensive guide to the IRPCS rules. These regulations are essential for safe navigation and preventing collisions at sea.</p>
-                </div>
-
-                <div class="rule-content">
-                    <h3>Part A - General</h3>
-                    
-                    <div id="rule1" class="rule-section">
-                        <h3>Rule 1 - Application</h3>
-                        <p>(a) These Rules shall apply to all vessels upon the high seas and in all waters connected therewith navigable by seagoing vessels.</p>
-                        <p>(b) Nothing in these Rules shall interfere with the operation of special rules made by an appropriate authority for roadsteads, harbours, rivers, lakes or inland waterways connected with the high seas and navigable by seagoing vessels. Such special rules shall conform as closely as possible to these Rules.</p>
-                        <p>(c) Nothing in these Rules shall interfere with the operation of any special rules made by the Government of any State with respect to additional station or signal lights, shapes or whistle signals for ships of war and vessels proceeding under convoy, or with respect to additional station or signal lights or shapes for fishing vessels engaged in fishing as a fleet.</p>
-                        <p>(d) Traffic separation schemes may be adopted by the Organization for the purpose of these Rules.</p>
-                        <p>(e) Whenever the Government concerned shall have determined that a vessel of any special construction or purpose cannot comply with the provisions of any of these Rules with respect to the number, position, range or arc of visibility of lights or shapes, as well as to the disposition and characteristics of sound-signalling appliances, such vessel shall comply with such other provisions in regard to the number, position, range or arc of visibility of lights or shapes, as well as to the disposition and characteristics of sound-signalling appliances, as her Government shall have determined to be the closest possible compliance with these Rules in respect of that vessel.</p>
+                <div id="rulesContent" class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">IRPCS Rules Reference</h2>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            The International Regulations for Preventing Collisions at Sea (IRPCS) are the navigation rules to be followed by ships and other vessels at sea to prevent collisions between two or more vessels.
+                        </div>
+                        
+                        <!-- Part A - General -->
+                        <section class="mb-5">
+                            <h3 class="section-title border-bottom pb-2 mb-4">Part A - General</h3>
+                            
+                            <div id="rule1" class="rule-item">
+                                <h4 class="rule-title">Rule 1 - Application</h4>
+                                <div class="rule-content">
+                                    <p>These Rules shall apply to all vessels upon the high seas and in all waters connected therewith navigable by seagoing vessels.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule2" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 2 - Responsibility</h4>
+                                <div class="rule-content">
+                                    <p>Nothing in these Rules shall exonerate any vessel, or the owner, master, or crew thereof, from the consequences of any neglect to comply with these Rules or of the neglect of any precaution which may be required by the ordinary practice of seamen, or by the special circumstances of the case.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule3" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 3 - General Definitions</h4>
+                                <div class="rule-content">
+                                    <p>For the purpose of these Rules, except where the context otherwise requires: (a) The word 'vessel' includes every description of water craft, including non-displacement craft, WIG craft and seaplanes, used or capable of being used as a means of transportation on water.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part B - Steering and Sailing Rules Section I -->
+                        <section class="mb-5">
+                            <h3 class="section-title border-bottom pb-2 mb-4">Part B - Steering and Sailing Rules</h3>
+                            <h4 class="subsection-title mb-3">Section I - Conduct of Vessels in Any Condition of Visibility</h4>
+                            
+                            <div id="rule4" class="rule-item">
+                                <h4 class="rule-title">Rule 4 - Application</h4>
+                                <div class="rule-content">
+                                    <p>Rules in this Section apply to any condition of visibility.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule5" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 5 - Look-out</h4>
+                                <div class="rule-content">
+                                    <p>Every vessel shall at all times maintain a proper look-out by sight and hearing as well as by all available means appropriate in the prevailing circumstances and conditions so as to make a full appraisal of the situation and of the risk of collision.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule6" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 6 - Safe Speed</h4>
+                                <div class="rule-content">
+                                    <p>Every vessel shall at all times proceed at a safe speed so that she can take proper and effective action to avoid collision and be stopped within a distance appropriate to the prevailing circumstances and conditions.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule7" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 7 - Risk of Collision</h4>
+                                <div class="rule-content">
+                                    <p>Every vessel shall use all available means appropriate to the prevailing circumstances and conditions to determine if risk of collision exists. If there is any doubt such risk shall be deemed to exist.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule8" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 8 - Action to Avoid Collision</h4>
+                                <div class="rule-content">
+                                    <p>Any action taken to avoid collision shall be taken in accordance with the Rules of this Part and shall, if the circumstances of the case admit, be positive, made in ample time and with due regard to the observance of good seamanship.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule9" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 9 - Narrow Channels</h4>
+                                <div class="rule-content">
+                                    <p>A vessel proceeding along the course of a narrow channel or fairway shall keep as near to the outer limit of the channel or fairway which lies on her starboard side as is safe and practicable.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule10" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 10 - Traffic Separation Schemes</h4>
+                                <div class="rule-content">
+                                    <p>This Rule applies to traffic separation schemes adopted by the Organization and does not relieve any vessel of her obligation under any other Rule.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part B - Steering and Sailing Rules Section II -->
+                        <section class="mb-5">
+                            <h4 class="subsection-title mb-3">Section II - Conduct of Vessels in Sight of One Another</h4>
+                            
+                            <div id="rule11" class="rule-item">
+                                <h4 class="rule-title">Rule 11 - Application</h4>
+                                <div class="rule-content">
+                                    <p>Rules in this Section apply to vessels in sight of one another.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule12" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 12 - Sailing Vessels</h4>
+                                <div class="rule-content">
+                                    <p>When two sailing vessels are approaching one another, so as to involve risk of collision, one of them shall keep out of the way of the other as follows:</p>
+                                    <ul>
+                                        <li>(a) When each has the wind on a different side, the vessel which has the wind on the port side shall keep out of the way of the other;</li>
+                                        <li>(b) When both have the wind on the same side, the vessel which is to windward shall keep out of the way of the vessel which is to leeward;</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule13" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 13 - Overtaking</h4>
+                                <div class="rule-content">
+                                    <p>Any vessel overtaking any other shall keep out of the way of the vessel being overtaken.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule14" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 14 - Head-on Situation</h4>
+                                <div class="rule-content">
+                                    <p>When two power-driven vessels are meeting on reciprocal or nearly reciprocal courses so as to involve risk of collision each shall alter her course to starboard so that each shall pass on the port side of the other.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule15" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 15 - Crossing Situation</h4>
+                                <div class="rule-content">
+                                    <p>When two power-driven vessels are crossing so as to involve risk of collision, the vessel which has the other on her own starboard side shall keep out of the way and shall, if the circumstances of the case admit, avoid crossing ahead of the other vessel.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule16" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 16 - Action by Give-way Vessel</h4>
+                                <div class="rule-content">
+                                    <p>Every vessel which is directed by these Rules to keep out of the way of another vessel shall, so far as possible, take early and substantial action to keep well clear.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule17" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 17 - Action by Stand-on Vessel</h4>
+                                <div class="rule-content">
+                                    <p>(a) Where one of two vessels is to keep out of the way the other shall keep her course and speed.</p>
+                                    <p>(b) The latter vessel may however take action to avoid collision by her manoeuvre alone, as soon as it becomes apparent to her that the vessel required to keep out of the way is not taking appropriate action in compliance with these Rules.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule18" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 18 - Responsibilities Between Vessels</h4>
+                                <div class="rule-content">
+                                    <p>Except where Rules 9, 10 and 13 otherwise require:</p>
+                                    <p>(a) A power-driven vessel underway shall keep out of the way of:</p>
+                                    <ul>
+                                        <li>(i) a vessel not under command;</li>
+                                        <li>(ii) a vessel restricted in her ability to manoeuvre;</li>
+                                        <li>(iii) a vessel engaged in fishing;</li>
+                                        <li>(iv) a sailing vessel.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part B - Steering and Sailing Rules Section III -->
+                        <section class="mb-5">
+                            <h4 class="subsection-title mb-3">Section III - Conduct of Vessels in Restricted Visibility</h4>
+                            
+                            <div id="rule19" class="rule-item">
+                                <h4 class="rule-title">Rule 19 - Conduct of Vessels in Restricted Visibility</h4>
+                                <div class="rule-content">
+                                    <p>(a) This Rule applies to vessels not in sight of one another when navigating in or near an area of restricted visibility.</p>
+                                    <p>(b) Every vessel shall proceed at a safe speed adapted to the prevailing circumstances and conditions of restricted visibility. A power-driven vessel shall have her engines ready for immediate manoeuvre.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part C - Lights and Shapes -->
+                        <section class="mb-5">
+                            <h3 class="section-title border-bottom pb-2 mb-4">Part C - Lights and Shapes</h3>
+                            
+                            <div id="rule20" class="rule-item">
+                                <h4 class="rule-title">Rule 20 - Application</h4>
+                                <div class="rule-content">
+                                    <p>(a) Rules in this Part shall be complied with in all weathers.</p>
+                                    <p>(b) The Rules concerning lights shall be complied with from sunset to sunrise, and during such times no other lights shall be exhibited, except such lights as cannot be mistaken for the lights specified in these Rules or do not impair their visibility or distinctive character, or interfere with the keeping of a proper look-out.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule21" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 21 - Definitions</h4>
+                                <div class="rule-content">
+                                    <p>(a) "Masthead light" means a white light placed over the fore and aft centreline of the vessel showing an unbroken light over an arc of the horizon of 225 degrees and so fixed as to show the light from right ahead to 22.5 degrees abaft the beam on either side of the vessel.</p>
+                                    <p>(b) "Sidelights" means a green light on the starboard side and a red light on the port side each showing an unbroken light over an arc of the horizon of 112.5 degrees and so fixed as to show the light from right ahead to 22.5 degrees abaft the beam on its respective side.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule22" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 22 - Visibility of Lights</h4>
+                                <div class="rule-content">
+                                    <p>The lights prescribed in these Rules shall have an intensity as specified in Section 8 of Annex I to these Regulations so as to be visible at the following minimum ranges:</p>
+                                    <p>(a) In vessels of 50 metres or more in length:</p>
+                                    <ul>
+                                        <li>a masthead light, 6 miles;</li>
+                                        <li>a sidelight, 3 miles;</li>
+                                        <li>a sternlight, 3 miles;</li>
+                                        <li>a towing light, 3 miles;</li>
+                                        <li>a white, red, green or yellow all-round light, 3 miles.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule23" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 23 - Power-driven Vessels Underway</h4>
+                                <div class="rule-content">
+                                    <p>(a) A power-driven vessel underway shall exhibit:</p>
+                                    <ul>
+                                        <li>(i) a masthead light forward;</li>
+                                        <li>(ii) a second masthead light abaft of and higher than the forward one; except that a vessel of less than 50 metres in length shall not be obliged to exhibit such light but may do so;</li>
+                                        <li>(iii) sidelights;</li>
+                                        <li>(iv) a sternlight.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule24" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 24 - Towing and Pushing</h4>
+                                <div class="rule-content">
+                                    <p>(a) A power-driven vessel when towing shall exhibit:</p>
+                                    <ul>
+                                        <li>(i) instead of the light prescribed in Rule 23(a)(i) or (a)(ii), two masthead lights in a vertical line;</li>
+                                        <li>(ii) sidelights;</li>
+                                        <li>(iii) a sternlight;</li>
+                                        <li>(iv) a towing light in a vertical line above the sternlight;</li>
+                                        <li>(v) when the length of the tow exceeds 200 metres, a diamond shape where it can best be seen.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule25" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 25 - Sailing Vessels Underway and Vessels Under Oars</h4>
+                                <div class="rule-content">
+                                    <p>(a) A sailing vessel underway shall exhibit:</p>
+                                    <ul>
+                                        <li>(i) sidelights;</li>
+                                        <li>(ii) a sternlight.</li>
+                                    </ul>
+                                    <p>(b) In a sailing vessel of less than 20 metres in length the lights prescribed in paragraph (a) of this Rule may be combined in one lantern carried at or near the top of the mast where it can best be seen.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule26" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 26 - Fishing Vessels</h4>
+                                <div class="rule-content">
+                                    <p>(a) A vessel engaged in fishing, whether underway or at anchor, shall exhibit only the lights and shapes prescribed in this Rule.</p>
+                                    <p>(b) A vessel when engaged in trawling, by which is meant the dragging through the water of a dredge net or other apparatus used as a fishing appliance, shall exhibit:</p>
+                                    <ul>
+                                        <li>(i) two all-round lights in a vertical line, the upper being green and the lower white;</li>
+                                        <li>(ii) a masthead light abaft of and higher than the all-round green light;</li>
+                                        <li>(iii) sidelights and a sternlight.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule27" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 27 - Vessels Not Under Command or Restricted in Ability to Manoeuvre</h4>
+                                <div class="rule-content">
+                                    <p>(a) A vessel not under command shall exhibit:</p>
+                                    <ul>
+                                        <li>(i) two all-round red lights in a vertical line where they can best be seen;</li>
+                                        <li>(ii) two balls or similar shapes in a vertical line where they can best be seen;</li>
+                                        <li>(iii) when making way through the water, in addition to the lights prescribed in this paragraph, sidelights and a sternlight.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div id="rule28" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 28 - Vessels Constrained by Their Draught</h4>
+                                <div class="rule-content">
+                                    <p>A vessel constrained by her draught may, in addition to the lights prescribed for power-driven vessels in Rule 23, exhibit where they can best be seen three all-round red lights in a vertical line, or a cylinder.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part D - Sound and Light Signals -->
+                        <section class="mb-5">
+                            <h3 class="section-title border-bottom pb-2 mb-4">Part D - Sound and Light Signals</h3>
+                            
+                            <div id="rule29" class="rule-item">
+                                <h4 class="rule-title">Rule 29 - Definitions</h4>
+                                <div class="rule-content">
+                                    <p>In these Rules:</p>
+                                    <p>(a) The word "whistle" means any sound signalling appliance capable of producing the prescribed blasts and which complies with the specifications in Annex III to these Regulations.</p>
+                                    <p>(b) The term "short blast" means a blast of about one second's duration.</p>
+                                    <p>(c) The term "prolonged blast" means a blast of from four to six seconds' duration.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule30" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 30 - Sound Signals in Restricted Visibility</h4>
+                                <div class="rule-content">
+                                    <p>In or near an area of restricted visibility, whether by day or night, the signals prescribed in this Rule shall be used as follows:</p>
+                                    <p>(a) A power-driven vessel making way through the water shall sound at intervals of not more than 2 minutes one prolonged blast.</p>
+                                    <p>(b) A power-driven vessel underway but stopped and making no way through the water shall sound at intervals of not more than 2 minutes two prolonged blasts in succession with an interval of about 2 seconds between them.</p>
+                                </div>
+                            </div>
+                            
+                            <div id="rule31" class="rule-item mt-4">
+                                <h4 class="rule-title">Rule 31 - Light Signals</h4>
+                                <div class="rule-content">
+                                    <p>Where it is impracticable for a vessel engaged in fishing or a vessel restricted in her ability to manoeuvre to keep well clear of a sailing vessel, the former vessel must show early indication of the manoeuvre to be executed. These signals may be supplemented by light signals of at least 5 seconds duration.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Part E - Exemptions -->
+                        <section class="mb-5">
+                            <h3 class="section-title border-bottom pb-2 mb-4">Part E - Exemptions</h3>
+                            
+                            <div id="rule32" class="rule-item">
+                                <h4 class="rule-title">Rule 32 - Exemptions</h4>
+                                <div class="rule-content">
+                                    <p>Any vessel whose keel is laid before the entry into force of the COLREGS, may, for a period not exceeding 9 years from the date of entry into force, be exempted from compliance with certain provisions, provided that the vessel complies substantially with the requirements of the previous regulations.</p>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <div class="alert alert-success mt-4">
+                            <h5><i class="fas fa-info-circle me-2"></i>Continue Your Learning</h5>
+                            <p>Now that you've reviewed the IRPCS rules, test your knowledge with our <a href="/quiz">interactive quizzes</a>.</p>
+                            <a href="/quiz" class="btn btn-primary mt-2">Take a Quiz <i class="fas fa-arrow-right ms-2"></i></a>
+                        </div>
                     </div>
-
-                    <div id="rule2" class="rule-section">
-                        <h3>Rule 2 - Responsibility</h3>
-                        <p>(a) Nothing in these Rules shall exonerate any vessel, or the owner, master or crew thereof, from the consequences of any neglect to comply with these Rules or of the neglect of any precaution which may be required by the ordinary practice of seamen, or by the special circumstances of the case.</p>
-                        <p>(b) In construing and complying with these Rules due regard shall be had to all dangers of navigation and collision and to any special circumstances, including the limitations of the vessels involved, which may make a departure from these Rules necessary to avoid immediate danger.</p>
-                    </div>
-
-                    <div id="rule3" class="rule-section">
-                        <h3>Rule 3 - General Definitions</h3>
-                        <p>For the purpose of these Rules, except where the context otherwise requires:</p>
-                        <ul>
-                            <li>(a) The word "vessel" includes every description of water craft, including non-displacement craft, WIG craft and seaplanes, used or capable of being used as a means of transportation on water.</li>
-                            <li>(b) The term "power-driven vessel" means any vessel propelled by machinery.</li>
-                            <li>(c) The term "sailing vessel" means any vessel under sail provided that propelling machinery, if fitted, is not being used.</li>
-                            <li>(d) The term "vessel engaged in fishing" means any vessel fishing with nets, lines, trawls or other fishing apparatus which restrict manoeuvrability, but does not include a vessel fishing with trolling lines or other fishing apparatus which do not restrict manoeuvrability.</li>
-                            <li>(e) The word "seaplane" includes any aircraft designed to manoeuvre on the water.</li>
-                            <li>(f) The term "vessel not under command" means a vessel which through some exceptional circumstance is unable to manoeuvre as required by these Rules and is therefore unable to keep out of the way of another vessel.</li>
-                            <li>(g) The term "vessel restricted in her ability to manoeuvre" means a vessel which from the nature of her work is restricted in her ability to manoeuvre as required by these Rules and is therefore unable to keep out of the way of another vessel.</li>
-                            <li>(h) The term "vessel constrained by her draught" means a power-driven vessel which, because of her draught in relation to the available depth and width of navigable water, is severely restricted in her ability to deviate from the course she is following.</li>
-                            <li>(i) The word "underway" means that a vessel is not at anchor, or made fast to the shore, or aground.</li>
-                            <li>(j) The words "length" and "breadth" of a vessel mean her length overall and greatest breadth.</li>
-                            <li>(k) Vessels shall be deemed to be in sight of one another only when one can be observed visually from the other.</li>
-                            <li>(l) The term "restricted visibility" means any condition in which visibility is restricted by fog, mist, falling snow, heavy rainstorms, sandstorms or any other similar causes.</li>
-                            <li>(m) The term "Wing-in-Ground (WIG) craft" means a multimodal craft which, in its main operational mode, flies in close proximity to the surface by utilizing surface-effect action.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Continue with other rules following the same pattern -->
-                    <!-- Add all rules from Rule 4 to Rule 41 following the same structure -->
-
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <div class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Smooth scrolling for sidebar links
-        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Back to top button functionality
-        const backToTopButton = document.querySelector('.back-to-top');
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Mobile sidebar toggle
-        const toggleButton = document.querySelector('.toggle-sidebar');
-        const sidebar = document.querySelector('.sidebar');
-        
-        toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(e.target) && !toggleButton.contains(e.target)) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
-
-        // Highlight active section in sidebar
-        const sections = document.querySelectorAll('.rule-section');
-        const navLinks = document.querySelectorAll('.sidebar-nav a');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= sectionTop - 60) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').slice(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-    </script>
-</body>
-</html> 
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/rules.js') }}"></script>
+{% endblock %} 

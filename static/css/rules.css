@@ -1,0 +1,178 @@
+/* Rules page specific styling */
+
+/* Navigation card */
+.rule-nav-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .rule-nav-card {
+        position: sticky;
+        top: 80px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+}
+
+.rule-nav-card .card-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--secondary-blue);
+}
+
+.rule-nav {
+    padding: 0;
+}
+
+.rule-nav-section {
+    margin-bottom: 15px;
+}
+
+.rule-nav a {
+    padding: 6px 16px;
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.rule-nav a:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--secondary-blue);
+}
+
+.rule-nav a.active {
+    background-color: rgba(52, 152, 219, 0.15);
+    color: var(--secondary-blue);
+    font-weight: 600;
+    border-left: 3px solid var(--secondary-blue);
+}
+
+/* Content card */
+#rulesContent {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.section-title {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.subsection-title {
+    color: var(--dark-gray);
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+/* Rule items */
+.rule-item {
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.rule-item:target {
+    background-color: rgba(52, 152, 219, 0.1);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.4);
+}
+
+.rule-title {
+    color: var(--secondary-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.rule-content p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.rule-content ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.rule-content li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+/* Search highlighting */
+.search-highlight {
+    background-color: rgba(255, 255, 204, 0.4);
+    border-left: 4px solid #ffc107;
+    padding-left: 15px;
+    animation: highlight-fade 2s ease;
+}
+
+@keyframes highlight-fade {
+    from { background-color: rgba(255, 255, 204, 0.8); }
+    to { background-color: rgba(255, 255, 204, 0.4); }
+}
+
+/* Search box */
+#rulesSearch {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+#rulesSearch:focus {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+#searchButton {
+    background-color: var(--secondary-blue);
+    color: white;
+    border: none;
+}
+
+#searchButton:hover {
+    background-color: var(--accent-blue);
+}
+
+/* Continue learning call-to-action */
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-success h5 {
+    color: #155724;
+    font-weight: 600;
+}
+
+.alert-success .btn-primary {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.alert-success .btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Scrollbar styling for navigation */
+.rule-nav-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.rule-nav-card::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.rule-nav-card::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 5px;
+}
+
+.rule-nav-card::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+} 

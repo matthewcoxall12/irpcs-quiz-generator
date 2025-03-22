@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rule Ready - Learn and test your knowledge of International Regulations for Preventing Collisions at Sea (IRPCS)">
+    <meta name="keywords" content="IRPCS, ColRegs, maritime rules, navigation rules, collision prevention, maritime education">
+    <meta name="author" content="Rule Ready">
+    
+    <!-- Cache Control -->
+    <meta http-equiv="Cache-Control" content="max-age=86400">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <title>{% block title %}Rule Ready{% endblock %}</title>
+    
+    <!-- Critical CSS -->
+    <style>
+        :root {
+            --primary-blue: #2c3e50;
+            --secondary-blue: #3498db;
+            --accent-blue: #2980b9;
+            --light-gray: #ecf0f1;
+            --dark-gray: #2c3e50;
+            --white: #ffffff;
+            --success-green: #27ae60;
+            --warning-yellow: #f39c12;
+            --danger-red: #e74c3c;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-gray);
+            padding-top: 60px;
+        }
+        
+        .navbar {
+            background-color: var(--primary-blue);
+            border-bottom: 3px solid var(--secondary-blue);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            color: var(--white) !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--secondary-blue) !important;
+        }
+        
+        .container {
+            max-width: 1200px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-blue);
+            border-color: var(--secondary-blue);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+    </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    
+    <!-- Fallback for CSS if JavaScript is disabled -->
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </noscript>
+    
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Rule Ready</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/quiz' %}active{% endif %}" href="/quiz">Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/rules' %}active{% endif %}" href="/rules">Rules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    {% if not request.path == '/' %}
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                {% if request.path == '/quiz' %}
+                    <li class="breadcrumb-item active" aria-current="page">Quiz</li>
+                {% elif request.path == '/rules' %}
+                    <li class="breadcrumb-item active" aria-current="page">IRPCS Rules</li>
+                {% elif request.path == '/about' %}
+                    <li class="breadcrumb-item active" aria-current="page">About</li>
+                {% elif request.path == '/results' %}
+                    <li class="breadcrumb-item"><a href="/quiz">Quiz</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Results</li>
+                {% endif %}
+            </ol>
+        </nav>
+    </div>
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+    
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Rule Ready</h5>
+                    <p>Your source for learning the International Regulations for Preventing Collisions at Sea (IRPCS).</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-white">Home</a></li>
+                        <li><a href="/quiz" class="text-white">Quiz</a></li>
+                        <li><a href="/rules" class="text-white">Rules</a></li>
+                        <li><a href="/about" class="text-white">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <p>Email: <a href="mailto:info@ruleready.com" class="text-white">info@ruleready.com</a></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <p class="mb-0">&copy; 2023 Rule Ready. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/static/js/service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html> 
