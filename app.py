@@ -17,6 +17,15 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
+# Configure the SQLAlchemy database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///irpcs_quiz.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+# Create database tables
+with app.app_context():
+    db.create_all()
+
 # Add security headers with Talisman
 talisman = Talisman(
     app,
