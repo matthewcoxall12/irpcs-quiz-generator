@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Rules{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4"><i class="fas fa-book-open nautical-icon"></i>International Regulations for Preventing Collisions at Sea</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="lead">The IRPCS (or COLREGS) are the "rules of the road" for maritime navigation, established to prevent collisions between vessels at sea.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wave-divider"></div>
+
+    <div class="rules-container">
+        {% for rule in IRPCS_RULES['rules'] %}
+        <div id="rule{{ rule['id'] }}" class="card rule-card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-paragraph nautical-icon"></i>
+                    Rule {{ rule['id'] }}: {{ rule['title'] }}
+                </h3>
+                <span class="badge bg-primary">Rule {{ rule['id'] }}</span>
+            </div>
+            <div class="card-body">
+                <div class="rule-content">
+                    {{ rule['content'] | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="#" class="btn btn-sm btn-outline-primary back-to-top">
+                    <i class="fas fa-arrow-up me-1"></i>Back to top
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .rule-card {
+        transition: all 0.3s ease;
+    }
+    
+    .rule-card:target {
+        box-shadow: 0 0 0 3px var(--accent-color), 0 8px 25px rgba(0,0,0,0.15);
+        animation: highlight 2s ease;
+    }
+    
+    @keyframes highlight {
+        0% { background-color: rgba(0, 180, 216, 0.2); }
+        70% { background-color: rgba(0, 180, 216, 0.2); }
+        100% { background-color: var(--card-bg); }
+    }
+    
+    .rule-content {
+        line-height: 1.7;
+        color: var(--text-color);
+    }
+
+    .rule-content br {
+        margin-bottom: 10px;
+    }
+    
+    .back-to-top {
+        font-size: 0.85rem;
+    }
+    
+    .back-to-top:hover {
+        transform: translateY(-3px);
+    }
+
+    .card-header {
+        background: rgba(0, 180, 216, 0.05);
+    }
+    
+    .card-footer {
+        background: transparent;
+        border-top: 1px dashed var(--border-color);
+    }
+</style>
+
+{% block extra_js %}
+<script>
+    // Back to top functionality
+    document.querySelectorAll('.back-to-top').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Highlight current rule in sidebar
+    function highlightCurrentRule() {
+        const scrollPosition = window.scrollY;
+        
+        // Find which rule is currently in view
+        document.querySelectorAll('.rule-card').forEach(rule => {
+            const ruleTop = rule.offsetTop;
+            const ruleHeight = rule.offsetHeight;
+            const ruleId = rule.getAttribute('id');
+            
+            if (scrollPosition >= ruleTop - 100 && 
+                scrollPosition < ruleTop + ruleHeight - 100) {
+                // Remove active class from all sidebar items
+                document.querySelectorAll('.toc-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to current rule's sidebar item
+                const sidebarItem = document.querySelector(`.toc-item[href="#${ruleId}"]`);
+                if (sidebarItem) {
+                    sidebarItem.classList.add('active');
+                }
+            }
+        });
+    }
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', highlightCurrentRule);
+    
+    // Initialize on page load
+    highlightCurrentRule();
+</script>
+{% endblock %}
+{% endblock %} 

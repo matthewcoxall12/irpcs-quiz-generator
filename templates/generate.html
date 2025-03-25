@@ -1,0 +1,751 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Generator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-4"><i class="fas fa-file-alt nautical-icon"></i>IRPCS Quiz Generator</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="lead">Create customized quizzes to test your knowledge of maritime navigation rules.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Quiz Options</h4>
+                </div>
+                <div class="card-body">
+                    <form id="quizForm" method="post" action="{{ url_for('generate') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="numQuestions" class="form-label">Number of Questions</label>
+                            <input type="number" class="form-control" id="numQuestions" name="num_questions" min="1" max="30" value="10">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Question Types</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="multipleChoice" name="question_types" value="Multiple Choice" checked>
+                                <label class="form-check-label" for="multipleChoice">
+                                    Multiple Choice
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fillBlank" name="question_types" value="Fill in the Gap" checked>
+                                <label class="form-check-label" for="fillBlank">
+                                    Fill in the Gap
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="writtenAnswer" name="question_types" value="Written Answer" checked>
+                                <label class="form-check-label" for="writtenAnswer">
+                                    Written Answer
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="truefalse" name="question_types" value="True/False" checked>
+                                <label class="form-check-label" for="truefalse">
+                                    True/False
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="difficulty" class="form-label">Difficulty Level</label>
+                            <select class="form-select" id="difficulty" name="difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="mixed">Mixed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showAnswers" name="show_answers" value="true">
+                                <label class="form-check-label" for="showAnswers">
+                                    Include Answer Key
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" id="generateBtn" class="btn btn-primary">
+                                <i class="fas fa-sync-alt me-2"></i>Generate Quiz
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4 d-none" id="downloadCard">
+                <div class="card-header">
+                    <h4 class="mb-0">Download Options</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" id="downloadStudentBtn" class="btn btn-outline-primary">
+                            <i class="fas fa-file-download me-2"></i>Download for Students
+                        </button>
+                        <button type="button" id="downloadTeacherBtn" class="btn btn-outline-success">
+                            <i class="fas fa-file-download me-2"></i>Download with Answers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div id="previewSection">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Preview</h4>
+                        <div id="previewControls" class="d-none">
+                            <span class="badge bg-info me-2" id="questionCount">0 Questions</span>
+                            <button class="btn btn-sm btn-outline-secondary" id="showAllBtn">
+                                <i class="fas fa-eye"></i> Show All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="previewContainer">
+                            <div class="preview-placeholder text-center py-5" id="previewPlaceholder">
+                                <i class="fas fa-file-alt fa-4x mb-3" style="color: var(--border-color);"></i>
+                                <h5 class="text-muted">Generate a quiz to see questions here</h5>
+                                <p class="text-muted">Adjust your options and click the "Generate Quiz" button</p>
+                            </div>
+                            <div id="loadingIndicator" class="text-center py-5 d-none">
+                                <div class="spinner-border text-primary mb-3" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <h5>Generating Quiz...</h5>
+                            </div>
+                            <div id="questionsContainer" class="d-none">
+                                <!-- Generated questions will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Question Format Examples</h4>
+                </div>
+                <div class="card-body">
+                    <div class="examples">
+                        <div class="example mb-4">
+                            <h5><span class="badge bg-primary me-2">Multiple Choice</span>Example</h5>
+                            <div class="example-content p-3 border rounded">
+                                <p><strong>1.</strong> You are nearing a bend, or an area of channel or fairway where other ships may be obscured by an intervening obstruction, what sound signal must you sound?</p>
+                                <div class="ps-4">
+                                    <p>A. One prolonged blast</p>
+                                    <p>B. Two prolonged blasts</p>
+                                    <p>C. One short blast</p>
+                                    <p>D. Two short blasts</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="example mb-4">
+                            <h5><span class="badge bg-info me-2">Fill in the Gap</span>Example</h5>
+                            <div class="example-content p-3 border rounded">
+                                <p><strong>2.</strong> When two power-driven vessels are meeting head-on, each shall alter her course to ____________.</p>
+                                <p class="mt-3">Answer: _____________________________________</p>
+                            </div>
+                        </div>
+                        
+                        <div class="example mb-4">
+                            <h5><span class="badge bg-success me-2">Written Answer</span>Example</h5>
+                            <div class="example-content p-3 border rounded">
+                                <p><strong>3.</strong></p>
+                                <p>a) You are nearing a bend, or an area of channel or fairway where other ships may be obscured by an intervening obstruction, what sound signal must you sound?</p>
+                                <p>b) What reply would you expect from a vessel within hearing around the bend or behind the intervening obstruction?</p>
+                                <p class="text-end"><small><em>2 Marks</em></small></p>
+                                <p>a) _____________________________________</p>
+                                <p>b) _____________________________________</p>
+                            </div>
+                        </div>
+                        
+                        <div class="example">
+                            <h5><span class="badge bg-warning me-2">True/False</span>Example</h5>
+                            <div class="example-content p-3 border rounded">
+                                <p><strong>4.</strong> A vessel under sail and power must be treated as a sailing vessel.</p>
+                                <div class="ps-4 mt-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleTrueFalse" id="exampleTrue" disabled>
+                                        <label class="form-check-label" for="exampleTrue">True</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exampleTrueFalse" id="exampleFalse" checked disabled>
+                                        <label class="form-check-label" for="exampleFalse">False</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Question Template for Multiple Choice -->
+<template id="multipleChoiceTemplate">
+    <div class="question-card card mb-4" data-question-index="{index}" data-question-type="Multiple Choice">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><span class="badge bg-primary me-2">Multiple Choice</span> Question {number}</h5>
+            <div class="question-actions">
+                <button class="btn btn-sm btn-outline-secondary btn-refresh-question" title="Regenerate Question">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">{question}</p>
+            <div class="choices-container ps-4">
+                <!-- choices will be inserted here -->
+            </div>
+            <div class="answer-section mt-3 border-top pt-3 d-none">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Answer:</strong> <span class="answer-text">{answer}</span>
+                    </div>
+                    <div>
+                        <small class="text-muted rule-reference">{rule_reference}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-sm btn-outline-info btn-toggle-answer">
+                <i class="fas fa-eye"></i> Show Answer
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Question Template for Fill in the Gap -->
+<template id="fillBlankTemplate">
+    <div class="question-card card mb-4" data-question-index="{index}" data-question-type="Fill in the Gap">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><span class="badge bg-info me-2">Fill in the Gap</span> Question {number}</h5>
+            <div class="question-actions">
+                <button class="btn btn-sm btn-outline-secondary btn-refresh-question" title="Regenerate Question">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">{question}</p>
+            <p class="mt-3">Answer: _____________________________________</p>
+            <div class="answer-section mt-3 border-top pt-3 d-none">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Answer:</strong> <span class="answer-text">{answer}</span>
+                    </div>
+                    <div>
+                        <small class="text-muted rule-reference">{rule_reference}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-sm btn-outline-info btn-toggle-answer">
+                <i class="fas fa-eye"></i> Show Answer
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Question Template for Written Answer -->
+<template id="writtenAnswerTemplate">
+    <div class="question-card card mb-4" data-question-index="{index}" data-question-type="Written Answer">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><span class="badge bg-success me-2">Written Answer</span> Question {number}</h5>
+            <div class="question-actions">
+                <button class="btn btn-sm btn-outline-secondary btn-refresh-question" title="Regenerate Question">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="question-text">{question}</div>
+            <p class="text-end"><small><em>{marks} Marks</em></small></p>
+            <div class="answer-section mt-3 border-top pt-3 d-none">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Answer:</strong> <span class="answer-text">{answer}</span>
+                    </div>
+                    <div>
+                        <small class="text-muted rule-reference">{rule_reference}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-sm btn-outline-info btn-toggle-answer">
+                <i class="fas fa-eye"></i> Show Answer
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Question Template for True/False -->
+<template id="trueFalseTemplate">
+    <div class="question-card card mb-4" data-question-index="{index}" data-question-type="True/False">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><span class="badge bg-warning me-2">True/False</span> Question {number}</h5>
+            <div class="question-actions">
+                <button class="btn btn-sm btn-outline-secondary btn-refresh-question" title="Regenerate Question">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="question-text">{question}</p>
+            <div class="choices-container ps-4 mt-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tf-{index}" disabled>
+                    <label class="form-check-label">True</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tf-{index}" disabled>
+                    <label class="form-check-label">False</label>
+                </div>
+            </div>
+            <div class="answer-section mt-3 border-top pt-3 d-none">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Answer:</strong> <span class="answer-text">{answer}</span>
+                    </div>
+                    <div>
+                        <small class="text-muted rule-reference">{rule_reference}</small>
+                    </div>
+                </div>
+                <div class="explanation-text mt-2 text-muted d-none">
+                    <small><strong>Explanation:</strong> {explanation}</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-sm btn-outline-info btn-toggle-answer">
+                <i class="fas fa-eye"></i> Show Answer
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let generatedQuestions = [];
+        const questionsContainer = document.getElementById('questionsContainer');
+        const previewPlaceholder = document.getElementById('previewPlaceholder');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const previewControls = document.getElementById('previewControls');
+        const questionCount = document.getElementById('questionCount');
+        const downloadCard = document.getElementById('downloadCard');
+        const generateBtn = document.getElementById('generateBtn');
+        
+        // Templates
+        const multipleChoiceTemplate = document.getElementById('multipleChoiceTemplate').innerHTML;
+        const fillBlankTemplate = document.getElementById('fillBlankTemplate').innerHTML;
+        const writtenAnswerTemplate = document.getElementById('writtenAnswerTemplate').innerHTML;
+        const trueFalseTemplate = document.getElementById('trueFalseTemplate').innerHTML;
+        
+        // Generate Quiz
+        generateBtn.addEventListener('click', function() {
+            // Get form data
+            const form = document.getElementById('quizForm');
+            const formData = new FormData(form);
+            
+            const questionTypes = Array.from(document.querySelectorAll('input[name="question_types"]:checked')).map(cb => cb.value);
+            if (questionTypes.length === 0) {
+                alert('Please select at least one question type');
+                return;
+            }
+            
+            // Convert form data to JSON object
+            const jsonData = {
+                num_questions: parseInt(formData.get('num_questions')),
+                question_types: questionTypes,
+                difficulty: formData.get('difficulty'),
+                show_answers: formData.has('show_answers'),
+                preview_only: true  // We want JSON data, not a document download
+            };
+            
+            // Show loading state
+            previewPlaceholder.classList.add('d-none');
+            questionsContainer.classList.add('d-none');
+            loadingIndicator.classList.remove('d-none');
+            generateBtn.disabled = true;
+            
+            // Submit the form as JSON
+            fetch('{{ url_for("generate") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message || `Server error: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    throw new Error(data.message || 'Unknown error occurred');
+                }
+                
+                // Store generated questions
+                generatedQuestions = data.questions;
+                
+                // Update question count
+                questionCount.textContent = `${generatedQuestions.length} Questions`;
+                
+                // Render questions
+                renderQuestions(generatedQuestions);
+                
+                // Show download options
+                downloadCard.classList.remove('d-none');
+                
+                // Show preview controls
+                previewControls.classList.remove('d-none');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                questionsContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        ${error.message || 'There was a problem generating your quiz.'}
+                    </div>
+                `;
+                questionsContainer.classList.remove('d-none');
+            })
+            .finally(() => {
+                // Hide loading indicator
+                loadingIndicator.classList.add('d-none');
+                generateBtn.disabled = false;
+            });
+        });
+        
+        // Render questions function
+        function renderQuestions(questions) {
+            questionsContainer.innerHTML = '';
+            
+            if (questions.length === 0) {
+                questionsContainer.innerHTML = '<div class="alert alert-warning">No questions were generated. Try different options.</div>';
+                questionsContainer.classList.remove('d-none');
+                return;
+            }
+            
+            // Show all questions immediately
+            questions.forEach((question, index) => {
+                const questionElement = createQuestionElement(question, index + 1);
+                questionsContainer.appendChild(questionElement);
+            });
+            
+            questionsContainer.classList.remove('d-none');
+        }
+        
+        // Create question element function
+        function createQuestionElement(question, number) {
+            let template;
+            
+            if (question.type === 'Multiple Choice') {
+                template = multipleChoiceTemplate
+                    .replace('{index}', number - 1)
+                    .replace('{number}', number)
+                    .replace('{question}', question.question)
+                    .replace('{answer}', question.answer)
+                    .replace('{rule_reference}', question.rule_reference || '');
+                
+                const element = document.createElement('div');
+                element.innerHTML = template;
+                const questionElement = element.firstElementChild;
+                
+                // Add choices
+                const choicesContainer = questionElement.querySelector('.choices-container');
+                question.choices.forEach((choice, idx) => {
+                    const choiceElement = document.createElement('p');
+                    const letter = String.fromCharCode(65 + idx); // A, B, C, D...
+                    choiceElement.innerHTML = `${letter}. ${choice}`;
+                    
+                    // Highlight correct answer (but keep it hidden initially)
+                    if (choice === question.answer) {
+                        choiceElement.classList.add('text-success', 'correct-answer');
+                    }
+                    
+                    choicesContainer.appendChild(choiceElement);
+                });
+                
+                return questionElement;
+            }
+            else if (question.type === 'Fill in the Gap') {
+                template = fillBlankTemplate
+                    .replace('{index}', number - 1)
+                    .replace('{number}', number)
+                    .replace('{question}', question.question)
+                    .replace('{answer}', question.answer)
+                    .replace('{rule_reference}', question.rule_reference || '');
+                
+                const element = document.createElement('div');
+                element.innerHTML = template;
+                return element.firstElementChild;
+            }
+            else if (question.type === 'True/False') {
+                template = trueFalseTemplate
+                    .replace(/{index}/g, number - 1)
+                    .replace('{number}', number)
+                    .replace('{question}', question.question)
+                    .replace('{answer}', question.answer)
+                    .replace('{rule_reference}', question.rule_reference || '');
+                
+                const element = document.createElement('div');
+                element.innerHTML = template;
+                const questionElement = element.firstElementChild;
+                
+                // Check the correct radio button
+                const radioButtons = questionElement.querySelectorAll('input[type="radio"]');
+                if (question.answer === "True") {
+                    radioButtons[0].checked = true;
+                } else {
+                    radioButtons[1].checked = true;
+                }
+                
+                // Add explanation if available
+                if (question.explanation) {
+                    const explanationElement = questionElement.querySelector('.explanation-text');
+                    explanationElement.classList.remove('d-none');
+                    explanationElement.innerHTML = explanationElement.innerHTML.replace('{explanation}', question.explanation);
+                }
+                
+                return questionElement;
+            }
+            else if (question.type === 'Written Answer') {
+                template = writtenAnswerTemplate
+                    .replace('{index}', number - 1)
+                    .replace('{number}', number)
+                    .replace('{question}', question.question.replace(/\n/g, '<br>'))
+                    .replace('{answer}', question.answer.replace(/\n/g, '<br>'))
+                    .replace('{marks}', question.marks || 1)
+                    .replace('{rule_reference}', question.rule_reference || '');
+                
+                const element = document.createElement('div');
+                element.innerHTML = template;
+                return element.firstElementChild;
+            }
+        }
+        
+        // Show/Hide answer buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-toggle-answer') || e.target.closest('.btn-toggle-answer')) {
+                const btn = e.target.classList.contains('btn-toggle-answer') ? 
+                    e.target : e.target.closest('.btn-toggle-answer');
+                const card = btn.closest('.question-card');
+                const answerSection = card.querySelector('.answer-section');
+                
+                if (answerSection.classList.contains('d-none')) {
+                    answerSection.classList.remove('d-none');
+                    btn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Answer';
+                    
+                    // Also highlight the correct answer for multiple choice
+                    if (card.dataset.questionType === 'Multiple Choice') {
+                        card.querySelectorAll('.correct-answer').forEach(element => {
+                            element.classList.add('fw-bold');
+                        });
+                    }
+                } else {
+                    answerSection.classList.add('d-none');
+                    btn.innerHTML = '<i class="fas fa-eye"></i> Show Answer';
+                    
+                    // Remove highlight from correct answer
+                    if (card.dataset.questionType === 'Multiple Choice') {
+                        card.querySelectorAll('.correct-answer').forEach(element => {
+                            element.classList.remove('fw-bold');
+                        });
+                    }
+                }
+            }
+        });
+        
+        // Show all answers button
+        document.getElementById('showAllBtn').addEventListener('click', function() {
+            const showAnswerBtns = document.querySelectorAll('.btn-toggle-answer');
+            const allHidden = Array.from(document.querySelectorAll('.answer-section')).some(section => 
+                section.classList.contains('d-none')
+            );
+            
+            if (allHidden) {
+                // Show all answers
+                document.querySelectorAll('.answer-section').forEach(section => {
+                    section.classList.remove('d-none');
+                });
+                showAnswerBtns.forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Answer';
+                });
+                document.querySelectorAll('.correct-answer').forEach(element => {
+                    element.classList.add('fw-bold');
+                });
+                this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide All';
+            } else {
+                // Hide all answers
+                document.querySelectorAll('.answer-section').forEach(section => {
+                    section.classList.add('d-none');
+                });
+                showAnswerBtns.forEach(btn => {
+                    btn.innerHTML = '<i class="fas fa-eye"></i> Show Answer';
+                });
+                document.querySelectorAll('.correct-answer').forEach(element => {
+                    element.classList.remove('fw-bold');
+                });
+                this.innerHTML = '<i class="fas fa-eye"></i> Show All';
+            }
+        });
+        
+        // Regenerate individual question
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-refresh-question') || e.target.closest('.btn-refresh-question')) {
+                const btn = e.target.classList.contains('btn-refresh-question') ? 
+                    e.target : e.target.closest('.btn-refresh-question');
+                const card = btn.closest('.question-card');
+                const index = parseInt(card.dataset.questionIndex);
+                const questionType = card.dataset.questionType;
+                
+                // Show loading on the button
+                const originalBtnHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+                
+                // Get form data for difficulty
+                const form = document.getElementById('quizForm');
+                const formData = new FormData(form);
+                const difficulty = formData.get('difficulty');
+                
+                // Request a new question
+                fetch('{{ url_for("regenerate_question") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question_type: questionType,
+                        difficulty: difficulty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Replace the question in the array
+                        generatedQuestions[index] = data.question;
+                        
+                        // Create new question element
+                        const newQuestionElement = createQuestionElement(data.question, index + 1);
+                        
+                        // Replace the old element
+                        card.replaceWith(newQuestionElement);
+                    } else {
+                        alert('Failed to regenerate question: ' + (data.message || 'Unknown error'));
+                        // Reset button state
+                        btn.innerHTML = originalBtnHTML;
+                        btn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to regenerate question. Please try again.');
+                    // Reset button state
+                    btn.innerHTML = originalBtnHTML;
+                    btn.disabled = false;
+                });
+            }
+        });
+        
+        // Download buttons
+        document.getElementById('downloadStudentBtn').addEventListener('click', function() {
+            downloadQuiz(false);
+        });
+        
+        document.getElementById('downloadTeacherBtn').addEventListener('click', function() {
+            downloadQuiz(true);
+        });
+        
+        function downloadQuiz(showAnswers) {
+            if (generatedQuestions.length === 0) {
+                alert('Please generate a quiz first');
+                return;
+            }
+            
+            // Show loading state
+            const btn = showAnswers ? 
+                document.getElementById('downloadTeacherBtn') : 
+                document.getElementById('downloadStudentBtn');
+            const originalBtnHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Downloading...';
+            btn.disabled = true;
+            
+            // Get form data
+            const form = document.getElementById('quizForm');
+            const formData = new FormData(form);
+            
+            // Create request data
+            const jsonData = {
+                question_types: Array.from(document.querySelectorAll('input[name="question_types"]:checked')).map(cb => cb.value),
+                difficulty: formData.get('difficulty'),
+                show_answers: showAnswers,
+                preview_only: false,  // We want to download a document
+                // Use our already generated questions
+                questions: generatedQuestions  
+            };
+            
+            // Submit the request
+            fetch('{{ url_for("generate") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message || `Server error: ${response.status}`);
+                    });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a download link for the file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const fileType = showAnswers ? 'teacher' : 'student';
+                const filename = `irpcs_quiz_${fileType}_${new Date().toISOString().slice(0,19).replace(/[-:T]/g, '')}.docx`;
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(`There was a problem downloading your quiz: ${error.message}`);
+            })
+            .finally(() => {
+                // Reset button state
+                btn.innerHTML = originalBtnHTML;
+                btn.disabled = false;
+            });
+        }
+    });
+</script>
+{% endblock %} 

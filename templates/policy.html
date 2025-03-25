@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Policy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-4"><i class="fas fa-shield-alt nautical-icon"></i>Privacy Policy</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="lead">Our commitment to protecting your privacy and data while using the IRPCS Navigator application.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wave-divider"></div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-info-circle me-2"></i>Information Collection</h3>
+                </div>
+                <div class="card-body">
+                    <div class="policy-content">
+                        <div class="policy-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="policy-text">
+                            <h4>Local Data Processing</h4>
+                            <p>The IRPCS Navigator application processes all data locally on your device. We do not collect, store, or transmit any personal information to external servers.</p>
+                            
+                            <h5>Quiz Data</h5>
+                            <p>When you generate quizzes, your quiz preferences and results remain on your device. No quiz data is stored on external servers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-cookie-bite me-2"></i>Cookies & Storage</h3>
+                </div>
+                <div class="card-body">
+                    <div class="policy-content">
+                        <div class="policy-icon">
+                            <i class="fas fa-save"></i>
+                        </div>
+                        <div class="policy-text">
+                            <h4>Local Storage Usage</h4>
+                            <p>We use browser local storage only to save your preferences, such as:</p>
+                            <ul class="check-list">
+                                <li>Theme preferences (light/dark mode)</li>
+                                <li>Quiz configuration settings</li>
+                                <li>UI customization options</li>
+                            </ul>
+                            <p>This data remains on your device and is not shared with us or any third parties.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-download me-2"></i>Downloadable Content</h3>
+                </div>
+                <div class="card-body">
+                    <div class="policy-content">
+                        <div class="policy-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <div class="policy-text">
+                            <h4>Generated Documents</h4>
+                            <p>When you generate quiz documents:</p>
+                            <ul class="check-list">
+                                <li>All document generation happens on our server</li>
+                                <li>Documents are temporarily stored only for the purpose of facilitating download</li>
+                                <li>All temporary files are automatically deleted immediately after download</li>
+                                <li>No personal information is embedded in the generated documents</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-user-shield me-2"></i>Your Rights & Choices</h3>
+                </div>
+                <div class="card-body">
+                    <div class="policy-content">
+                        <div class="policy-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div class="policy-text">
+                            <h4>Control Your Data</h4>
+                            <p>Since all data is stored locally on your device, you have complete control over your information:</p>
+                            <ul class="check-list">
+                                <li>Clear browser data to remove all stored preferences</li>
+                                <li>Use incognito/private browsing to prevent storage of any data</li>
+                                <li>Delete downloaded files from your device when no longer needed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-life-ring me-2"></i>Contact Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="policy-content">
+                        <div class="policy-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="policy-text">
+                            <h4>Questions or Concerns?</h4>
+                            <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+                            <p class="contact-info">
+                                <i class="fas fa-envelope-open me-2"></i>support@irpcsnavigator.com
+                            </p>
+                            <p class="mt-4 policy-update">
+                                <strong>Last Updated:</strong> March 25, 2025
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .policy-content {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .policy-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        background: rgba(0, 180, 216, 0.1);
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 2rem;
+    }
+    
+    .policy-text {
+        flex: 1;
+    }
+    
+    .policy-text h4 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .contact-info {
+        display: inline-block;
+        background: rgba(0, 180, 216, 0.1);
+        padding: 10px 15px;
+        border-radius: 8px;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+    
+    .policy-update {
+        font-size: 0.9rem;
+        padding-top: 1rem;
+        border-top: 1px dashed var(--border-color);
+    }
+    
+    /* Check list styling */
+    .check-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .check-list li {
+        padding: 0.3rem 0;
+        position: relative;
+        padding-left: 1.8rem;
+    }
+
+    .check-list li::before {
+        content: "\f00c";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: var(--accent-color);
+    }
+    
+    @media (max-width: 768px) {
+        .policy-content {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .policy-icon {
+            margin-right: 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .check-list li {
+            text-align: left;
+        }
+    }
+</style>
+{% endblock %} 
